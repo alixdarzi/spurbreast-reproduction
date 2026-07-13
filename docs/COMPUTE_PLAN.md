@@ -3,6 +3,10 @@
 These are conservative planning estimates. The first GPU epoch must record
 actual wall time and `torch.cuda.max_memory_allocated()`.
 
+The training history now records per-epoch wall time and peak allocated VRAM.
+The Colab notebook rejects GPUs below 10 GiB rather than silently changing the
+approved batch size.
+
 ## Measured storage
 
 | Artifact | Size |

@@ -17,6 +17,7 @@ reports/tables/*
 !reports/tables/.gitkeep
 !reports/tables/data_audit_summary.json
 !reports/tables/shortcut_baselines.json
+!reports/tables/sensitivity_selection.json
 
 # Python
 .venv/

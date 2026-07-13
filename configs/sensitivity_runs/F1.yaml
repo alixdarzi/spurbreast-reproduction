@@ -1,0 +1,11 @@
+extends: ../reproduction.yaml
+experiment:
+  name: sensitivity_f1
+  seed: 2025
+  additional_seeds: []
+training:
+  epochs: 10
+  optimizer: adamw
+  learning_rate: 0.00001
+  weight_decay: 0.00001
+  scheduler: constant

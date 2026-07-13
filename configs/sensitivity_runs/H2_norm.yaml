@@ -1,0 +1,5 @@
+extends: H2.yaml
+experiment:
+  name: sensitivity_h2_norm
+data:
+  normalize: true

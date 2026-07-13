@@ -251,6 +251,10 @@ def main() -> None:
         history_path = result_dir / "history.jsonl"
         stopped_for_resume = False
         for epoch in range(first_epoch, int(config["training"]["epochs"])):
+            if device.type == "cuda":
+                torch.cuda.reset_peak_memory_stats(device)
+                torch.cuda.synchronize(device)
+            epoch_started = time.monotonic()
             train_metrics = train_one_epoch(
                 model,
                 loaders["training"],
@@ -271,6 +275,9 @@ def main() -> None:
             )["metrics"]
             if scheduler is not None:
                 scheduler.step()
+            if device.type == "cuda":
+                torch.cuda.synchronize(device)
+            epoch_runtime = time.monotonic() - epoch_started
             accuracy = float(validation["accuracy"])
             nll = float(validation["nll"])
             improved = accuracy > best_accuracy + 1e-12 or (
@@ -299,6 +306,12 @@ def main() -> None:
                 "train": train_metrics,
                 "validation": validation,
                 "best_epoch": best_epoch,
+                "epoch_runtime_seconds": epoch_runtime,
+                "peak_vram_bytes": (
+                    torch.cuda.max_memory_allocated(device)
+                    if device.type == "cuda"
+                    else None
+                ),
             }
             append_jsonl(history_path, row)
             print(json_dumps(row))

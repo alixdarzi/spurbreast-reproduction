@@ -1,0 +1,5 @@
+extends: F2.yaml
+experiment:
+  name: sensitivity_f2_norm
+data:
+  normalize: true

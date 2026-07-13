@@ -73,3 +73,13 @@ default `RandomResizedCrop(224)` after resize to 256. A seed-2025 montage showed
 that one sampled crop removed the visible enhancing lesion from a positive
 slice. This is documented as an augmentation risk; it does not justify changing
 the close-reproduction transform after viewing test data.
+
+## 2026-07-13 — Post-Gate-3 execution controls
+
+The approved sensitivity screen uses frozen inherited configurations H1–H4
+for 10 epochs and seed 2025. A provenance-matched wrapper starts, resumes, or
+skips each run after verifying the archive MD5 and audited manifest hash.
+Selection reads validation summaries only. F1–F2 run only below the declared
+0.97 validation-accuracy trigger; normalization runs only for the winning
+optimization. Three expanded 50-epoch seed configs are generated only after
+the selector reaches `ready_to_lock`, and must be committed before test access.

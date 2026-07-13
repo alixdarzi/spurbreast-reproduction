@@ -1,0 +1,12 @@
+extends: ../reproduction.yaml
+experiment:
+  name: sensitivity_f2
+  seed: 2025
+  additional_seeds: []
+training:
+  epochs: 10
+  optimizer: sgd
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  momentum: 0.0
+  scheduler: cosine

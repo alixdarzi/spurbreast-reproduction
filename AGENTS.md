@@ -51,13 +51,16 @@ split.
 python scripts/download_data.py --config configs/reproduction.yaml
 python scripts/prepare_data.py --config configs/reproduction.yaml --verify-images --hash-images
 python -m pytest
-python scripts/train.py --config configs/smoke_test.yaml
-python scripts/train.py --config configs/reproduction.yaml
-python scripts/evaluate.py --config configs/reproduction.yaml --checkpoint checkpoints/<run-id>/best.pt --splits training validation test --allow-test
+python scripts/run_or_resume.py --config configs/sensitivity_runs/H1.yaml --device cuda
+python scripts/select_sensitivity.py
 ```
 
 For the required resume check, first run the smoke configuration with
 `--stop-after-epoch 0`, then pass its `latest.pt` to `--resume`.
+
+After H1–H4, follow the selector's requested fallback/normalization run. Only
+use `select_sensitivity.py --write-lock` when its status is `ready_to_lock`.
+Commit the generated lock before executing any final seed or test evaluation.
 
 ## Verification required before expensive training
 

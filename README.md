@@ -32,10 +32,11 @@ labelled patient-macro metrics, with a transparent discrepancy analysis.
 
 ## Project status
 
-The checksum-verified audit, 14-test suite, preprocessing inspection, and
-checkpoint/resume smoke run are complete. The project is at Approval Gate 3,
-before expensive GPU training or learned-model test evaluation. No paper
-result is claimed as reproduced yet.
+The checksum-verified audit, regression suite, preprocessing inspection, and
+checkpoint/resume smoke run are complete. Approval Gate 3 has been approved;
+the repository now contains frozen validation-only sensitivity configs and a
+Drive-persistent Colab workflow. GPU results are still pending, and no learned
+model has been evaluated on test. No paper result is claimed as reproduced yet.
 
 ## Data
 
@@ -83,14 +84,18 @@ the actual Torch, CUDA, and GPU versions.
 python scripts/download_data.py --config configs/reproduction.yaml
 python scripts/prepare_data.py --config configs/reproduction.yaml --verify-images --hash-images
 python -m pytest
-python scripts/train.py --config configs/smoke_test.yaml
-python scripts/train.py --config configs/reproduction.yaml
-python scripts/evaluate.py --config configs/reproduction.yaml --checkpoint checkpoints/<run-id>/best.pt --splits training validation test --allow-test
+python scripts/run_or_resume.py --config configs/sensitivity_runs/H1.yaml --device cuda
+python scripts/select_sensitivity.py
+# Run the requested normalization/fallback config, then:
+python scripts/select_sensitivity.py --write-lock
+# Commit configs/locked before running each locked seed.
 ```
 
-Hyperparameter sensitivity runs are validation-only. The final test set is not
-used until preprocessing, optimization, checkpoint selection, and seeds have
-been locked.
+Run H1–H4 one at a time. Hyperparameter sensitivity is validation-only. The
+selector requests fallback or normalization runs when needed and produces the
+three 50-epoch seed configs only after all required validation evidence exists.
+The final test set is not used until the resulting lock is committed. See
+`notebooks/colab_reproduction.ipynb` for the persistent Colab sequence.
 
 ## Repository layout
 

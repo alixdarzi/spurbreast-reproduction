@@ -33,6 +33,7 @@ normalization_sensitivity:
   run_only_for_best_optimization: true
 bounded_fallback:
   trigger: no_primary_validation_accuracy_at_least_0.97
+  validation_accuracy_threshold: 0.97
   configurations:
     - id: F1
       optimizer: adamw

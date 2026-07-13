@@ -1,0 +1,5 @@
+extends: F1.yaml
+experiment:
+  name: sensitivity_f1_norm
+data:
+  normalize: true

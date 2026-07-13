@@ -1,0 +1,5 @@
+extends: H1.yaml
+experiment:
+  name: sensitivity_h1_norm
+data:
+  normalize: true
