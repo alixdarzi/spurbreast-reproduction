@@ -1,5 +1,7 @@
 # SpurBreast Field-Strength Reproduction
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alixdarzi/spurbreast-reproduction/blob/main/notebooks/colab_reproduction.ipynb)
+
 Close reproduction of the **Magnetic Field Strength — ResNet-50** row in
 Table 2 of *SpurBreast: A Curated Dataset for Investigating Spurious
 Correlations in Real-world Breast MRI Classification* (MICCAI 2025).
