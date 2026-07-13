@@ -80,7 +80,7 @@ def download_parallel_ranges(
     destination: Path,
     total_bytes: int,
     expected_md5: str,
-    workers: int = 8,
+    workers: int = 1,
     segment_bytes: int = 16 * 1024 * 1024,
 ) -> Path:
     """Resume a verified prefix and fetch the remaining non-overlapping ranges in parallel."""
@@ -221,7 +221,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Download and verify official SpurBreast data")
     parser.add_argument("--config", default="configs/reproduction.yaml")
     parser.add_argument("--no-extract", action="store_true")
-    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Non-overlapping range workers; one is the reliable, server-friendly default",
+    )
     args = parser.parse_args()
 
     config, _ = load_config(args.config)

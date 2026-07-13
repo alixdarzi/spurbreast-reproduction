@@ -33,3 +33,18 @@ Use sorted file paths and `pathlib` rather than reproducing the official
 loader's unsorted `os.listdir` order and forward-slash filename parsing. These
 changes improve determinism and Windows compatibility without changing cohort
 membership or image content.
+
+## 2026-07-13 — Download reliability
+
+The project downloader uses checksum-verified, resumable 16 MiB byte ranges
+with one worker by default. Eight parallel Zenodo requests stalled on the local
+connection, so concurrency is opt-in. For the initial local audit, Windows BITS
+was used as an OS-managed persistent transfer; the result is accepted only
+after matching the same published MD5.
+
+## 2026-07-13 — Exact epoch-boundary resume
+
+DataLoader workers are not persisted between epochs. Their seeds are derived
+from a saved generator state, so resuming after an epoch does not depend on
+uncaptured persistent-worker augmentation state. The small worker startup cost
+is accepted for stronger provenance.

@@ -43,6 +43,7 @@ def test_patient_macro_is_not_silently_mixed_with_micro() -> None:
         patient_ids=["A", "A", "A", "B", "B", "B"],
     )
     assert result["patients"] == 2
+    assert result["accuracy_defined_patients"] == 2
     assert 0 <= result["accuracy"] <= 1
 
 

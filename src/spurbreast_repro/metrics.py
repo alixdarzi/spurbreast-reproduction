@@ -72,6 +72,7 @@ def patient_macro_metrics(
     output: dict[str, float] = {"patients": float(len(rows))}
     for key in ("accuracy", "ppv", "npv", "sensitivity", "specificity"):
         values = np.asarray([row[key] for row in rows], dtype=float)
+        output[f"{key}_defined_patients"] = float(np.sum(~np.isnan(values)))
         output[key] = float(np.nanmean(values)) if not np.isnan(values).all() else float("nan")
     return output
 

@@ -120,7 +120,9 @@ def make_loaders(config: dict[str, Any], seed: int):
             pin_memory=torch.cuda.is_available(),
             worker_init_fn=seed_worker,
             generator=generator,
-            persistent_workers=workers > 0,
+            # Respawning workers each epoch allows epoch-boundary resume to
+            # reproduce worker RNG from the saved DataLoader generator state.
+            persistent_workers=False,
         )
     return loaders, generator
 
@@ -158,6 +160,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Train without touching the final test split")
     parser.add_argument("--config", default="configs/smoke_test.yaml")
     parser.add_argument("--resume", type=Path)
+    parser.add_argument(
+        "--stop-after-epoch",
+        type=int,
+        help="Intentional smoke-test pause after saving this epoch",
+    )
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     args = parser.parse_args()
     config, config_path = load_config(args.config)
@@ -205,7 +212,10 @@ def main() -> None:
     start_time = time.monotonic()
     try:
         loaders, generator = make_loaders(config, seed)
-        model = build_model(**config["model"]).to(device)
+        model_config = dict(config["model"])
+        if args.resume:
+            model_config["weights"] = "none"
+        model = build_model(**model_config).to(device)
         criterion = build_erm_loss()
         optimizer = build_optimizer(model, config["training"])
         scheduler = build_scheduler(optimizer, config["training"])
@@ -232,6 +242,7 @@ def main() -> None:
             best_nll = float(state["best_val_nll"])
 
         history_path = result_dir / "history.jsonl"
+        stopped_for_resume = False
         for epoch in range(first_epoch, int(config["training"]["epochs"])):
             train_metrics = train_one_epoch(
                 model,
@@ -284,11 +295,15 @@ def main() -> None:
             }
             append_jsonl(history_path, row)
             print(json.dumps(row, sort_keys=True))
+            if args.stop_after_epoch is not None and epoch >= args.stop_after_epoch:
+                stopped_for_resume = epoch < int(config["training"]["epochs"]) - 1
+                break
 
         runtime = time.monotonic() - start_time
+        final_status = "paused" if stopped_for_resume else "completed"
         summary = {
             "run_id": run_id,
-            "status": "completed",
+            "status": final_status,
             "best_epoch": best_epoch,
             "best_val_accuracy": best_accuracy,
             "best_val_nll": best_nll,
@@ -300,11 +315,12 @@ def main() -> None:
             {
                 **base_registry,
                 "finished_at": utc_now(),
-                "status": "completed",
+                "status": final_status,
                 "runtime_seconds": f"{runtime:.3f}",
                 "best_epoch": best_epoch,
                 "best_val_accuracy": best_accuracy,
                 "result_path": result_dir.relative_to(PROJECT_ROOT).as_posix(),
+                "notes": "intentional epoch-boundary resume check" if stopped_for_resume else "",
             },
         )
     except Exception as error:

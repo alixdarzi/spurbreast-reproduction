@@ -45,4 +45,6 @@ validation-to-test performance gap.
 - Local GTX 1660 Ti: audit, tests, reduced smoke run, resume test.
 - Free Colab GPU with at least 12 GB: locked batch-32 FP32 final runs.
 - Save atomic `latest` and `best` checkpoints every epoch, including RNG state.
+- Verify resume by intentionally pausing the two-epoch smoke run after epoch 0
+  and completing epoch 1 from `latest.pt`.
 - Stop before full training at Approval Gate 3.

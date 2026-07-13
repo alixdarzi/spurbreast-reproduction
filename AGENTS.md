@@ -56,6 +56,9 @@ python scripts/train.py --config configs/reproduction.yaml
 python scripts/evaluate.py --config configs/reproduction.yaml --checkpoint checkpoints/<run-id>/best.pt --splits training validation test --allow-test
 ```
 
+For the required resume check, first run the smoke configuration with
+`--stop-after-epoch 0`, then pass its `latest.pt` to `--resume`.
+
 ## Verification required before expensive training
 
 - Archive checksum and safe extraction pass.

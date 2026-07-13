@@ -17,7 +17,7 @@ model:
   num_classes: 2
   freeze_backbone: false
 training:
-  epochs: 1
+  epochs: 2
   optimizer: adamw
   learning_rate: 0.0001
   weight_decay: 0.0001

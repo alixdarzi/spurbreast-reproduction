@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import platform
 import random
@@ -74,12 +75,22 @@ def atomic_torch_save(payload: dict[str, Any], destination: str | Path) -> None:
         temporary_path.unlink(missing_ok=True)
 
 
+def _json_safe(payload: Any) -> Any:
+    if isinstance(payload, float) and not math.isfinite(payload):
+        return None
+    if isinstance(payload, dict):
+        return {str(key): _json_safe(value) for key, value in payload.items()}
+    if isinstance(payload, (list, tuple)):
+        return [_json_safe(value) for value in payload]
+    return payload
+
+
 def write_json(path: str | Path, payload: Any) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     with temporary.open("w", encoding="utf-8") as handle:
-        json.dump(payload, handle, indent=2, sort_keys=True, allow_nan=True)
+        json.dump(_json_safe(payload), handle, indent=2, sort_keys=True, allow_nan=False)
         handle.write("\n")
     os.replace(temporary, path)
 
@@ -88,7 +99,7 @@ def append_jsonl(path: str | Path, payload: Any) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
-        handle.write(json.dumps(payload, sort_keys=True, allow_nan=True) + "\n")
+        handle.write(json.dumps(_json_safe(payload), sort_keys=True, allow_nan=False) + "\n")
 
 
 def git_commit(project_root: str | Path) -> str:

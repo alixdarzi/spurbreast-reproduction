@@ -51,7 +51,9 @@ def main() -> None:
     checkpoint = torch.load(args.checkpoint, map_location=device)
     if checkpoint["config_sha256"] != config_sha256(config):
         raise RuntimeError("Evaluation configuration does not match checkpoint")
-    model = build_model(**config["model"]).to(device)
+    model_config = dict(config["model"])
+    model_config["weights"] = "none"
+    model = build_model(**model_config).to(device)
     model.load_state_dict(checkpoint["model_state"])
     criterion = build_erm_loss()
     dataset_dir = project_path(config["data"]["dataset_dir"])
