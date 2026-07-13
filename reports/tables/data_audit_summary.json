@@ -1,0 +1,80 @@
+{
+  "corrupt_images": 0,
+  "cross_split_duplicate_hash_groups": 0,
+  "cross_split_overlap_counts": {
+    "training_test": 0,
+    "training_validation": 0,
+    "validation_test": 0
+  },
+  "duplicate_hash_groups": 0,
+  "failures": [],
+  "field_strength_image_counts": {
+    "test/0": {
+      "1.5T": 1684,
+      "3T": 1710
+    },
+    "test/1": {
+      "1.5T": 1394,
+      "3T": 2000
+    },
+    "training/0": {
+      "3T": 4781
+    },
+    "training/1": {
+      "1.5T": 4781
+    },
+    "validation/0": {
+      "3T": 1788
+    },
+    "validation/1": {
+      "1.5T": 1788
+    }
+  },
+  "field_strength_patient_counts": {
+    "test/1.5T": 71,
+    "test/3T": 79,
+    "training/1.5T": 200,
+    "training/3T": 200,
+    "validation/1.5T": 75,
+    "validation/3T": 75
+  },
+  "hashed_images": true,
+  "image_counts": {
+    "test/0": 3394,
+    "test/1": 3394,
+    "training/0": 4781,
+    "training/1": 4781,
+    "validation/0": 1788,
+    "validation/1": 1788
+  },
+  "image_modes": {
+    "L": 19926
+  },
+  "image_sizes": {
+    "320x320": 19926
+  },
+  "manifest_sha256": "44b4fa5da873efabc323d0871037da96de494c38020d41c499c644c149d6561e",
+  "metadata_cohort_patients": 922,
+  "patient_counts": {
+    "test/0": 150,
+    "test/1": 150,
+    "training/0": 200,
+    "training/1": 200,
+    "validation/0": 75,
+    "validation/1": 75
+  },
+  "status": "passed",
+  "total_images": 19926,
+  "total_unique_patients": 700,
+  "unique_split_patients": {
+    "test": 150,
+    "training": 400,
+    "validation": 150
+  },
+  "verified_images": true,
+  "within_split_label_intersections": {
+    "test": 150,
+    "training": 0,
+    "validation": 0
+  }
+}

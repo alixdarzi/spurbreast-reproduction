@@ -3,6 +3,13 @@
 Results will be written only after the data audit, smoke tests, Approval Gate 3,
 and locked reproduction runs are complete.
 
+The released-data audit passed: 19,926 valid 320×320 grayscale PNGs, 700
+unique patients, no corruption, no duplicate hashes, and no patient leakage.
+The deterministic field-strength oracle is perfect on training and validation
+but gives 0.457 accuracy, 0.453 PPV, and 0.461 NPV on the released test set.
+That audit result is not a model reproduction and exposes an unresolved
+disagreement with Table 2; see `docs/DATA_AUDIT.md`.
+
 ## Paper versus reproduction
 
 | Split | Metric | Paper | Reproduction | Difference | 95% patient-cluster CI |

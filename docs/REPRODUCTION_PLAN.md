@@ -27,6 +27,10 @@ assumptions and a bounded validation-only sensitivity study.
 11. Lock the configuration before evaluating the test split.
 12. Report seeds 2025, 2026, and 2027 without seed selection.
 
+The full archive audit has completed successfully. The fixed manifest SHA-256
+is `44b4fa5da873efabc323d0871037da96de494c38020d41c499c644c149d6561e`.
+See `docs/DATA_AUDIT.md` for verified counts and shortcut-oracle results.
+
 ## Primary metrics
 
 Accuracy, PPV, and NPV are computed from a single global slice-level confusion
@@ -39,6 +43,11 @@ In addition to the Table 2 metrics, report predicted-positive rates and
 classification metrics stratified by 1.5 T versus 3 T. A credible reproduction
 must demonstrate the correct field-strength shortcut direction and a large
 validation-to-test performance gap.
+
+The non-learned field oracle is an audit baseline, not a selectable model. It
+is perfect on training/validation and reaches only 0.457 slice accuracy on the
+released test set; this is evidence of shortcut failure and also exposes an
+unresolved disagreement with the published test metrics.
 
 ## Execution
 

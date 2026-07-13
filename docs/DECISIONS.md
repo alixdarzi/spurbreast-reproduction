@@ -48,3 +48,28 @@ DataLoader workers are not persisted between epochs. Their seeds are derived
 from a saved generator state, so resuming after an epoch does not depend on
 uncaptured persistent-worker augmentation state. The small worker startup cost
 is accepted for stronger provenance.
+
+## 2026-07-13 — Released-archive audit
+
+The checksum-verified archive contains 19,926 grayscale 320×320 PNGs from 700
+unique patients. Full decoding and pixel hashing found no corrupt images, no
+duplicate image hashes, no cross-split duplicate hashes, and no cross-split
+patient overlap. The released folder membership is therefore the immutable
+primary split for this close reproduction.
+
+## 2026-07-13 — Shortcut-oracle discrepancy
+
+The field-strength oracle is perfect on the released training and validation
+sets, confirming the intended shortcut construction. On the released test set
+it produces TP=1,394, FP=1,684, TN=1,710, and FN=2,000 (accuracy 0.4573, PPV
+0.4529, NPV 0.4609). These values are reported as an audit result, not adjusted
+to resemble Table 2. Model and hyperparameter choices remain validation-only;
+the test split will not be used to resolve this discrepancy.
+
+## 2026-07-13 — Visual preprocessing audit
+
+The primary transform remains the official repository example, including the
+default `RandomResizedCrop(224)` after resize to 256. A seed-2025 montage showed
+that one sampled crop removed the visible enhancing lesion from a positive
+slice. This is documented as an augmentation risk; it does not justify changing
+the close-reproduction transform after viewing test data.

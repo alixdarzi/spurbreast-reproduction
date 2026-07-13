@@ -1,0 +1,170 @@
+{
+  "test": {
+    "constant_non_tumor": {
+      "patient_macro": {
+        "accuracy": 0.5469068795060393,
+        "accuracy_defined_patients": 150.0,
+        "npv": 0.5469068795060393,
+        "npv_defined_patients": 150.0,
+        "patients": 150.0,
+        "ppv": null,
+        "ppv_defined_patients": 0.0,
+        "sensitivity": 0.0,
+        "sensitivity_defined_patients": 150.0,
+        "specificity": 1.0,
+        "specificity_defined_patients": 150.0
+      },
+      "slice_micro": {
+        "accuracy": 0.5,
+        "fn": 3394,
+        "fp": 0,
+        "n": 6788,
+        "npv": 0.5,
+        "ppv": null,
+        "sensitivity": 0.0,
+        "specificity": 1.0,
+        "tn": 3394,
+        "tp": 0
+      }
+    },
+    "field_strength_oracle": {
+      "patient_macro": {
+        "accuracy": 0.4731649893793122,
+        "accuracy_defined_patients": 150.0,
+        "npv": 0.5190555717265994,
+        "npv_defined_patients": 79.0,
+        "patients": 150.0,
+        "ppv": 0.4221036371900768,
+        "ppv_defined_patients": 71.0,
+        "sensitivity": 0.47333333333333333,
+        "sensitivity_defined_patients": 150.0,
+        "specificity": 0.5266666666666666,
+        "specificity_defined_patients": 150.0
+      },
+      "slice_micro": {
+        "accuracy": 0.4572775486152033,
+        "fn": 2000,
+        "fp": 1684,
+        "n": 6788,
+        "npv": 0.4609164420485175,
+        "ppv": 0.45289148797920725,
+        "sensitivity": 0.41072480848556275,
+        "specificity": 0.5038302887448438,
+        "tn": 1710,
+        "tp": 1394
+      }
+    }
+  },
+  "training": {
+    "constant_non_tumor": {
+      "patient_macro": {
+        "accuracy": 0.5,
+        "accuracy_defined_patients": 400.0,
+        "npv": 0.5,
+        "npv_defined_patients": 400.0,
+        "patients": 400.0,
+        "ppv": null,
+        "ppv_defined_patients": 0.0,
+        "sensitivity": 0.0,
+        "sensitivity_defined_patients": 200.0,
+        "specificity": 1.0,
+        "specificity_defined_patients": 200.0
+      },
+      "slice_micro": {
+        "accuracy": 0.5,
+        "fn": 4781,
+        "fp": 0,
+        "n": 9562,
+        "npv": 0.5,
+        "ppv": null,
+        "sensitivity": 0.0,
+        "specificity": 1.0,
+        "tn": 4781,
+        "tp": 0
+      }
+    },
+    "field_strength_oracle": {
+      "patient_macro": {
+        "accuracy": 1.0,
+        "accuracy_defined_patients": 400.0,
+        "npv": 1.0,
+        "npv_defined_patients": 200.0,
+        "patients": 400.0,
+        "ppv": 1.0,
+        "ppv_defined_patients": 200.0,
+        "sensitivity": 1.0,
+        "sensitivity_defined_patients": 200.0,
+        "specificity": 1.0,
+        "specificity_defined_patients": 200.0
+      },
+      "slice_micro": {
+        "accuracy": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "n": 9562,
+        "npv": 1.0,
+        "ppv": 1.0,
+        "sensitivity": 1.0,
+        "specificity": 1.0,
+        "tn": 4781,
+        "tp": 4781
+      }
+    }
+  },
+  "validation": {
+    "constant_non_tumor": {
+      "patient_macro": {
+        "accuracy": 0.5,
+        "accuracy_defined_patients": 150.0,
+        "npv": 0.5,
+        "npv_defined_patients": 150.0,
+        "patients": 150.0,
+        "ppv": null,
+        "ppv_defined_patients": 0.0,
+        "sensitivity": 0.0,
+        "sensitivity_defined_patients": 75.0,
+        "specificity": 1.0,
+        "specificity_defined_patients": 75.0
+      },
+      "slice_micro": {
+        "accuracy": 0.5,
+        "fn": 1788,
+        "fp": 0,
+        "n": 3576,
+        "npv": 0.5,
+        "ppv": null,
+        "sensitivity": 0.0,
+        "specificity": 1.0,
+        "tn": 1788,
+        "tp": 0
+      }
+    },
+    "field_strength_oracle": {
+      "patient_macro": {
+        "accuracy": 1.0,
+        "accuracy_defined_patients": 150.0,
+        "npv": 1.0,
+        "npv_defined_patients": 75.0,
+        "patients": 150.0,
+        "ppv": 1.0,
+        "ppv_defined_patients": 75.0,
+        "sensitivity": 1.0,
+        "sensitivity_defined_patients": 75.0,
+        "specificity": 1.0,
+        "specificity_defined_patients": 75.0
+      },
+      "slice_micro": {
+        "accuracy": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "n": 3576,
+        "npv": 1.0,
+        "ppv": 1.0,
+        "sensitivity": 1.0,
+        "specificity": 1.0,
+        "tn": 1788,
+        "tp": 1788
+      }
+    }
+  }
+}

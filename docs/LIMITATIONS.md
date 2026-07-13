@@ -12,6 +12,11 @@
   split is published. Three training seeds on that split are not equivalent.
 - Test accuracy, PPV, and NPV in Table 2 cannot all arise from one standard
   confusion matrix on the released balanced test set.
+- The exact documented shortcut rule (predict tumor for every 1.5 T slice and
+  non-tumor for every 3 T slice) gives 0.457 accuracy, 0.453 PPV, and 0.461 NPV
+  on the released test folders. It therefore cannot by itself explain the
+  reported 0.52/0.62/0.41 test row. A different metric aggregation, different
+  split realization, or an imprecise qualitative description may be involved.
 - Slice-level samples within a patient are correlated; naive per-slice
   confidence intervals would be invalid.
 - Free Colab hardware and session duration are not guaranteed.

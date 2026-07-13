@@ -32,9 +32,10 @@ labelled patient-macro metrics, with a transparent discrepancy analysis.
 
 ## Project status
 
-The repository is being built in staged approval gates. Full reproduction
-results will be added only after the data audit, tests, smoke run, and final
-GPU run have completed. No paper result is claimed as reproduced yet.
+The checksum-verified data audit is complete and passed. Full reproduction
+results will be added only after tests, the checkpoint/resume smoke run,
+Approval Gate 3, and the final GPU runs. No paper result is claimed as
+reproduced yet.
 
 ## Data
 
@@ -53,7 +54,9 @@ Expected published split:
 | Validation | 3,576 | 150 |
 | Test | 6,788 | 150 |
 
-See `data/README.md` for preparation details.
+The release was fully decoded and hashed: all 19,926 files are valid 320×320
+grayscale PNGs, with zero duplicate hashes and zero cross-split patient
+overlap. See `docs/DATA_AUDIT.md` and `data/README.md`.
 
 ## Setup
 

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import json
 import sys
 from pathlib import Path
 
@@ -47,7 +46,7 @@ def main() -> None:
         }
     destination = PROJECT_ROOT / "reports" / "tables" / "shortcut_baselines.json"
     write_json(destination, output)
-    print(json.dumps(output, indent=2, sort_keys=True))
+    print(destination.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

@@ -47,3 +47,14 @@ Published results:
 The winning configuration, loss, normalization, exact weights, seeds, metric
 aggregation, and threshold are not reported. No supplementary material was
 submitted and no complete training implementation was released.
+
+## Released split audit finding
+
+The checksum-verified release exactly implements the perfect field-strength
+association in training and validation. The test folder contains both labels
+for all 150 patients, but its slice counts are not independent of field
+strength: the 1.5 T patients contribute 1,394 tumor and 1,684 non-tumor slices,
+while the 3 T patients contribute 2,000 tumor and 1,710 non-tumor slices. A
+literal field-only classifier therefore scores 0.457 accuracy, 0.453 PPV, and
+0.461 NPV on released test images. This does not match Table 2 and is retained
+as an unresolved provenance or metric-aggregation discrepancy.
