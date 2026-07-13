@@ -37,9 +37,11 @@ labelled patient-macro metrics, with a transparent discrepancy analysis.
 The checksum-verified audit, regression suite, preprocessing inspection,
 checkpoint/resume smoke run, and validation-only sensitivity screen are
 complete. The selected lock is SGD at learning rate 0.01 with a cosine schedule
-and ImageNet normalization (`H4_norm`), frozen for seeds 2025-2027. No learned
-model has been evaluated on test, and no paper result is claimed as reproduced
-yet. The latest pause point and exact recovery sequence are recorded in
+and ImageNet normalization (`H4_norm`), frozen for seeds 2025-2027. Seed 2025
+has completed all 50 epochs; seeds 2026 and 2027 are waiting for free Colab GPU
+quota to recover. No learned model has been evaluated on test, and no paper
+result is claimed as reproduced yet. The latest pause point and exact recovery
+sequence are recorded in
 [`docs/STATUS.md`](docs/STATUS.md).
 
 ## Data

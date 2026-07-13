@@ -1,6 +1,6 @@
 # Project checkpoint and resume status
 
-Last updated: 2026-07-13 (Asia/Tehran)
+Last updated: 2026-07-14 (Asia/Tehran)
 
 ## Current state
 
@@ -14,9 +14,10 @@ H4 (SGD, learning rate 0.01, cosine schedule) won the optimizer screen, and its
 prespecified normalized counterpart improved both validation accuracy and NLL.
 The final winner is therefore `H4_norm`. The three 50-epoch seed configs and
 their hashes are written under `configs/locked/`, with
-`test_status: not_evaluated`. No locked seed has started and no learned
-checkpoint has been evaluated on the test split, so no Table 2 reproduction
-result is claimed yet.
+`test_status: not_evaluated`. Locked seed 2025 completed all 50 epochs and its
+best checkpoint is safely persisted on Drive. Seeds 2026 and 2027 have not
+started. No learned checkpoint has been evaluated on the test split, so no
+Table 2 reproduction result is claimed yet.
 
 ## Verified scientific and data facts
 
@@ -58,6 +59,19 @@ The selector status is `ready_to_lock`, fallback runs were not triggered, and
 the final winner is `H4_norm`. These results are recorded in
 `reports/tables/sensitivity_selection.json`; the test split was not loaded.
 
+## Locked-seed progress
+
+| Seed | Epochs | Status | Best epoch | Best val accuracy | Best val NLL | Runtime |
+|---:|---:|---|---:|---:|---:|---:|
+| 2025 | 50/50 | Completed | 33 | 0.9871 | 0.0423 | 7,488 s (2 h 5 min) |
+| 2026 | 0/50 | Not started | — | — | — | — |
+| 2027 | 0/50 | Not started | — | — | — | — |
+
+Seed 2025 used the committed `H4_norm` lock and completed with return code 0.
+Its result directory is
+`locked_table2_field_strength_resnet50-seed2025-20260713T175147Z`.
+The test split remains unseen.
+
 ## Completed engineering safeguards
 
 - Frozen H1–H4 validation-only sensitivity configurations.
@@ -87,18 +101,26 @@ the Python 3.12-compatible project, downloaded and audited the official archive,
 and passed all regression tests. H1, H2, H3, H4, and H4_norm then completed with
 checkpoints and results persisted under Google Drive.
 
-The current safe boundary is after validation selection and lock generation.
-The final-evaluation cell still has `ALLOW_FINAL_TEST = False` and has never run.
+Seed 2025 completed before the hosted runtime disconnected. The queued
+continuation cell did not execute after the disconnection, so seeds 2026 and
+2027 were not created. A subsequent reconnect attempt on 2026-07-14 was denied
+because the free Colab account had reached its temporary GPU usage limit. A CPU
+runtime was used only to audit the persisted Drive summaries; no training or
+test evaluation was run on that CPU runtime.
+
+The current safe boundary is after locked seed 2025. The final-evaluation cell
+still has `ALLOW_FINAL_TEST = False` and has never run.
 
 ## Exact next execution procedure
 
-1. Commit and push `configs/locked/`, the sensitivity selection report, this
-   status update, and the sensitivity registry rows.
-2. In Colab, fast-forward the Drive clone to that lock commit and verify a clean
-   worktree. Do not regenerate or alter the lock after this point.
-3. Run locked seed 2025 for 50 epochs with the resume wrapper.
-4. Run seeds 2026 and 2027 in later resumable sessions using their committed
-   configs. Do not inspect test metrics during any seed run.
+1. Wait for free Colab GPU access to become available again; do not run the
+   locked training on the temporary CPU runtime.
+2. Reconnect to a T4, mount Drive, and verify the repository is still at the
+   published lock commit with a clean tracked worktree.
+3. Run seed 2026 from `configs/locked/seed2026.yaml`, then seed 2027 from
+   `configs/locked/seed2027.yaml`. The resume wrapper makes either run safe to
+   restart if Colab disconnects again.
+4. Do not inspect test metrics during either seed run.
 5. Confirm all three best checkpoints and completed summaries exist.
 6. Perform the single authorized evaluation of train, validation, and test for
    each locked seed. Do not use test outcomes to change preprocessing, training,
@@ -108,8 +130,8 @@ The final-evaluation cell still has `ALLOW_FINAL_TEST = False` and has never run
 
 ## Remaining work
 
-- Commit and publish the completed `H4_norm` configuration lock.
-- Run seeds 2025, 2026, and 2027 for 50 epochs each.
+- Wait for free Colab GPU quota to recover.
+- Run locked seeds 2026 and 2027 for 50 epochs each.
 - Perform the single locked train/validation/test evaluation.
 - Aggregate global and field-strength-stratified metrics, calibration,
   uncertainty intervals, and seed variability.
@@ -117,7 +139,7 @@ The final-evaluation cell still has `ALLOW_FINAL_TEST = False` and has never run
   additional manageable extension after the primary reproduction is secure.
 - Complete the final report, figures, limitations, and portfolio presentation.
 
-Based on the measured 25-minute, 10-epoch sensitivity runs, the three 50-epoch
-locked seeds should require roughly 6.3 GPU-hours in total, plus evaluation and
-report generation. Budget 7–9 Colab GPU-hours across resumable sessions; this
-excludes service queueing and interrupted free runtimes.
+Based on seed 2025's measured 2-hour-5-minute runtime, seeds 2026 and 2027
+should require roughly 4.2 additional GPU-hours in total. Budget 5–7 remaining
+Colab GPU-hours including evaluation and operational overhead; this excludes
+quota recovery time, service queueing, and interrupted free runtimes.
