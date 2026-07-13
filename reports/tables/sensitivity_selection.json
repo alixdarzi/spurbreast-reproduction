@@ -1,0 +1,81 @@
+{
+  "fallback_results": [],
+  "fallback_triggered": false,
+  "final_winner": {
+    "best_epoch": 7,
+    "best_val_accuracy": 0.9916107382550335,
+    "best_val_nll": 0.027879504132209514,
+    "config_path": "configs/sensitivity_runs/H4_norm.yaml",
+    "config_sha256": "aed8e26a221b05933f163327994c07e527102d6351de0a5e6d850f1fcab573df",
+    "id": "H4_norm",
+    "run_id": "sensitivity_h4_norm-seed2025-20260713T171602Z"
+  },
+  "normalization_result": {
+    "best_epoch": 7,
+    "best_val_accuracy": 0.9916107382550335,
+    "best_val_nll": 0.027879504132209514,
+    "config_path": "configs/sensitivity_runs/H4_norm.yaml",
+    "config_sha256": "aed8e26a221b05933f163327994c07e527102d6351de0a5e6d850f1fcab573df",
+    "id": "H4_norm",
+    "run_id": "sensitivity_h4_norm-seed2025-20260713T171602Z"
+  },
+  "optimization_winner": {
+    "best_epoch": 7,
+    "best_val_accuracy": 0.9893736017897091,
+    "best_val_nll": 0.03187638541002511,
+    "config_path": "configs/sensitivity_runs/H4.yaml",
+    "config_sha256": "ae86a11b1e188d445fd5bbb3c1ebe180cb417d5cccf145d1fa65b4c12bd9c886",
+    "id": "H4",
+    "run_id": "sensitivity_h4-seed2025-20260713T164827Z"
+  },
+  "primary_results": [
+    {
+      "best_epoch": 4,
+      "best_val_accuracy": 0.9784675615212528,
+      "best_val_nll": 0.04620090533584998,
+      "config_path": "configs/sensitivity_runs/H1.yaml",
+      "config_sha256": "4d9c4ab833d66aeb3badb4e7316c90a641172564dd87d296eb920d6df0a57586",
+      "id": "H1",
+      "run_id": "sensitivity_h1-seed2025-20260713T152015Z"
+    },
+    {
+      "best_epoch": 9,
+      "best_val_accuracy": 0.9605704697986577,
+      "best_val_nll": 0.10476622109256328,
+      "config_path": "configs/sensitivity_runs/H2.yaml",
+      "config_sha256": "4a5b93a1efcec03ac794ffa10cc9e6ffb67761fe790c398419378e59b6f4788e",
+      "id": "H2",
+      "run_id": "sensitivity_h2-seed2025-20260713T154936Z"
+    },
+    {
+      "best_epoch": 4,
+      "best_val_accuracy": 0.9784675615212528,
+      "best_val_nll": 0.04620090533584998,
+      "config_path": "configs/sensitivity_runs/H3.yaml",
+      "config_sha256": "9e3d81bfdd4560eaba2cb5dfffedb3dbeac2ca1fced0a21adff630a608a6a0e1",
+      "id": "H3",
+      "run_id": "sensitivity_h3-seed2025-20260713T161921Z"
+    },
+    {
+      "best_epoch": 7,
+      "best_val_accuracy": 0.9893736017897091,
+      "best_val_nll": 0.03187638541002511,
+      "config_path": "configs/sensitivity_runs/H4.yaml",
+      "config_sha256": "ae86a11b1e188d445fd5bbb3c1ebe180cb417d5cccf145d1fa65b4c12bd9c886",
+      "id": "H4",
+      "run_id": "sensitivity_h4-seed2025-20260713T164827Z"
+    }
+  ],
+  "primary_winner": {
+    "best_epoch": 7,
+    "best_val_accuracy": 0.9893736017897091,
+    "best_val_nll": 0.03187638541002511,
+    "config_path": "configs/sensitivity_runs/H4.yaml",
+    "config_sha256": "ae86a11b1e188d445fd5bbb3c1ebe180cb417d5cccf145d1fa65b4c12bd9c886",
+    "id": "H4",
+    "run_id": "sensitivity_h4-seed2025-20260713T164827Z"
+  },
+  "selection_data": "validation_only",
+  "selection_rule": "highest_validation_accuracy_then_lower_nll_then_earliest",
+  "status": "ready_to_lock"
+}

@@ -93,3 +93,13 @@ dependencies support Python 3.12, so `requires-python` was widened from
 version changed. The persistent notebook now requires a clean tracked worktree
 and performs a fast-forward-only pull from `origin/main` on setup so resumed
 sessions cannot silently run stale source code.
+
+## 2026-07-13 — Validation-only configuration lock
+
+All four primary sensitivity runs completed without test access. H4 (SGD,
+learning rate 0.01, weight decay 1e-4, cosine schedule) was the optimization
+winner with validation accuracy 0.9894 and NLL 0.0319. Its prespecified
+ImageNet-normalized counterpart reached 0.9916 and 0.0279, so the frozen
+`final_winner` is `H4_norm`. The 0.97 fallback threshold was exceeded and F1–F2
+were not run. Locked configs use 50 epochs and seeds 2025, 2026, and 2027;
+`LOCK.json` records `test_status: not_evaluated`.

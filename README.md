@@ -34,12 +34,12 @@ labelled patient-macro metrics, with a transparent discrepancy analysis.
 
 ## Project status
 
-The checksum-verified audit, regression suite, preprocessing inspection, and
-checkpoint/resume smoke run are complete. Approval Gate 3 has been approved;
-the repository now contains frozen validation-only sensitivity configs and a
-Drive-persistent Colab workflow. GPU results are still pending, and no learned
-model has been evaluated on test. No paper result is claimed as reproduced yet.
-The latest pause point and exact recovery sequence are recorded in
+The checksum-verified audit, regression suite, preprocessing inspection,
+checkpoint/resume smoke run, and validation-only sensitivity screen are
+complete. The selected lock is SGD at learning rate 0.01 with a cosine schedule
+and ImageNet normalization (`H4_norm`), frozen for seeds 2025-2027. No learned
+model has been evaluated on test, and no paper result is claimed as reproduced
+yet. The latest pause point and exact recovery sequence are recorded in
 [`docs/STATUS.md`](docs/STATUS.md).
 
 ## Data

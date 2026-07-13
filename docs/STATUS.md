@@ -9,9 +9,14 @@ archive audit, preprocessing inspection, regression tests, and real-data CPU
 checkpoint/resume smoke test are complete. The public repository is available
 at <https://github.com/alixdarzi/spurbreast-reproduction>.
 
-GPU sensitivity training has **not** started. No learned checkpoint has been
-evaluated on the test split, and no Table 2 reproduction result is claimed yet.
-This is the safe boundary at which work was paused.
+The complete validation-only sensitivity screen has finished on a Colab T4.
+H4 (SGD, learning rate 0.01, cosine schedule) won the optimizer screen, and its
+prespecified normalized counterpart improved both validation accuracy and NLL.
+The final winner is therefore `H4_norm`. The three 50-epoch seed configs and
+their hashes are written under `configs/locked/`, with
+`test_status: not_evaluated`. No locked seed has started and no learned
+checkpoint has been evaluated on the test split, so no Table 2 reproduction
+result is claimed yet.
 
 ## Verified scientific and data facts
 
@@ -38,6 +43,21 @@ This is the safe boundary at which work was paused.
   standard globally pooled confusion matrix. Correct global metrics will be
   retained, with patient-macro metrics reported separately.
 
+## Validation-only sensitivity result
+
+| ID | Optimizer / preprocessing | Best epoch | Val accuracy | Val NLL |
+|---|---|---:|---:|---:|
+| H1 | AdamW, 1e-4, raw input | 4 | 0.9785 | 0.0462 |
+| H2 | AdamW, 1e-3, raw input | 9 | 0.9606 | 0.1048 |
+| H3 | Adam, 1e-4, raw input | 4 | 0.9785 | 0.0462 |
+| H4 | SGD, 0.01, cosine, raw input | 7 | 0.9894 | 0.0319 |
+| H4_norm | H4 with ImageNet normalization | 7 | **0.9916** | **0.0279** |
+
+Selection used validation accuracy, then lower NLL, then the earlier epoch.
+The selector status is `ready_to_lock`, fallback runs were not triggered, and
+the final winner is `H4_norm`. These results are recorded in
+`reports/tables/sensitivity_selection.json`; the test split was not loaded.
+
 ## Completed engineering safeguards
 
 - Frozen H1–H4 validation-only sensitivity configurations.
@@ -51,53 +71,44 @@ This is the safe boundary at which work was paused.
 - CPU real-image smoke test paused after epoch 0 and resumed through epoch 1;
   it constructed no test DataLoader.
 - Regression suite and notebook validation passed before publication.
+- Five validation-only sensitivity runs completed with Drive-persistent
+  checkpoints and registry records; peak observed VRAM stayed below 3.3 GB.
+- The final lock selects `H4_norm` for seeds 2025, 2026, and 2027, keeps the
+  physical batch size at 32, and records `test_status: not_evaluated`.
 
 ## Colab checkpoint
 
 Persistent notebook copy:
 <https://colab.research.google.com/drive/1rv8ogoWYrrsLDxdHU2pyOUzoKPGPZgoR>
 
-The Drive-owned copy exists and was connected to a hosted T4 GPU, but the live
-runtime repeatedly returned to **Connecting**. Earlier attempts also produced
-`[object CloseEvent]` and one `ValueError: mount failed`. Cell 1 did not reach
-`Mounted at /content/drive`, so the repository was not cloned to Drive and no
-download, package installation, GPU audit, or training began in Colab.
+Changing the VPN route resolved the connection problem. The notebook mounted
+Drive, cloned the repository, verified a Tesla T4 with 14.6 GiB VRAM, installed
+the Python 3.12-compatible project, downloaded and audited the official archive,
+and passed all regression tests. H1, H2, H3, H4, and H4_norm then completed with
+checkpoints and results persisted under Google Drive.
 
-The repeated loss of a freshly connected T4 is consistent with the VPN or its
-route interrupting Colab's long-lived browser/runtime connection. The Drive
-mount error may still be a separate Google Drive authorization or Drive-layout
-problem and must be checked after the connection is stable.
+The current safe boundary is after validation selection and lock generation.
+The final-evaluation cell still has `ALLOW_FINAL_TEST = False` and has never run.
 
-## Exact resume procedure after changing the VPN
+## Exact next execution procedure
 
-1. Open the persistent notebook link above and reload it.
-2. Connect to a hosted GPU and confirm the status stays connected and identifies
-   a T4 for several minutes.
-3. Run Cell 1 and approve Google Drive access. Do not continue unless its output
-   confirms `Mounted at /content/drive` and shows the Drive project path.
-4. Run Cell 2. Confirm CUDA is available, record the actual Torch/CUDA/GPU
-   versions, and retain batch size 32 unless a protocol deviation is documented.
-5. Run Cell 3. It performs the checksum-verified download, deterministic data
-   preparation/audit, and regression tests. Confirm all integrity checks pass.
-6. Begin validation-only screening with H1. Run H2, H3, and H4 in later sessions,
-   using the resume wrapper. Do not run final-evaluation cells.
-7. Follow the selector's requested fallback/normalization run. Write and commit
-   the lock only when its status is `ready_to_lock`.
-8. Run all three locked 50-epoch seeds. Test access remains one-time and only
-   after the committed lock and all prespecified seeds are complete.
-
-If Cell 1 fails again with the VPN disabled, use Colab's **Disconnect and delete
-runtime**, reconnect once, and retry authorization. If the fresh runtime still
-cannot mount Drive, inspect the Drive-specific cause before starting any
-ephemeral `/content` training; checkpoints and run records must remain
-persistent and resumable.
+1. Commit and push `configs/locked/`, the sensitivity selection report, this
+   status update, and the sensitivity registry rows.
+2. In Colab, fast-forward the Drive clone to that lock commit and verify a clean
+   worktree. Do not regenerate or alter the lock after this point.
+3. Run locked seed 2025 for 50 epochs with the resume wrapper.
+4. Run seeds 2026 and 2027 in later resumable sessions using their committed
+   configs. Do not inspect test metrics during any seed run.
+5. Confirm all three best checkpoints and completed summaries exist.
+6. Perform the single authorized evaluation of train, validation, and test for
+   each locked seed. Do not use test outcomes to change preprocessing, training,
+   checkpoint selection, thresholds, or seed inclusion.
+7. Aggregate global, patient-macro, and field-strength-stratified metrics,
+   calibration, confidence intervals, and across-seed variability.
 
 ## Remaining work
 
-- Establish a stable Colab T4 plus persistent Drive mount.
-- Complete Cell 2 and Cell 3 environment/data verification.
-- Run H1–H4 and any prespecified selector-requested sensitivity runs.
-- Freeze, commit, and publish the selected configuration lock.
+- Commit and publish the completed `H4_norm` configuration lock.
 - Run seeds 2025, 2026, and 2027 for 50 epochs each.
 - Perform the single locked train/validation/test evaluation.
 - Aggregate global and field-strength-stratified metrics, calibration,
@@ -106,6 +117,7 @@ persistent and resumable.
   additional manageable extension after the primary reproduction is secure.
 - Complete the final report, figures, limitations, and portfolio presentation.
 
-Estimated remaining Colab GPU time is approximately 8–16 hours, spread across
-resumable sessions. This estimate excludes service queueing, interrupted free
-runtimes, and the one-time data transfer/audit.
+Based on the measured 25-minute, 10-epoch sensitivity runs, the three 50-epoch
+locked seeds should require roughly 6.3 GPU-hours in total, plus evaluation and
+report generation. Budget 7–9 Colab GPU-hours across resumable sessions; this
+excludes service queueing and interrupted free runtimes.

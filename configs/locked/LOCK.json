@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-07-13T17:42:27.502991+00:00",
+  "git_commit_before_lock": "71a3606972984dd0feba0aee73d2aba3d198bcd3",
+  "locked_config_sha256": {
+    "2025": "efddaec1b4a73b659562609e8f2df4500e697c81e62406b1a392130802867d5d",
+    "2026": "ba7c805c0902e1d6f7e53225970cf01b6445f4ed6b8f1c3959411eb251c5c5fd",
+    "2027": "308f71d99d551b5138a074f16b16b3817baca00d50e46a4900486ec5fc47779e"
+  },
+  "selected_run_id": "sensitivity_h4_norm-seed2025-20260713T171602Z",
+  "selected_sensitivity_id": "H4_norm",
+  "test_status": "not_evaluated"
+}
