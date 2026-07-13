@@ -10,6 +10,10 @@ but gives 0.457 accuracy, 0.453 PPV, and 0.461 NPV on the released test set.
 That audit result is not a model reproduction and exposes an unresolved
 disagreement with Table 2; see `docs/DATA_AUDIT.md`.
 
+Gate 3 engineering checks passed: 14 tests and a real-data, two-epoch CPU smoke
+run that paused after epoch 0 and resumed from `latest.pt`. Expensive screening,
+locked training, and learned-model test evaluation remain pending approval.
+
 ## Paper versus reproduction
 
 | Split | Metric | Paper | Reproduction | Difference | 95% patient-cluster CI |

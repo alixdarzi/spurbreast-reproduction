@@ -1,4 +1,7 @@
 protocol: validation_only
+screening_epochs: 10
+selection_rule: highest_validation_accuracy_then_lower_nll_then_earliest
+test_access: forbidden_until_configuration_lock
 primary_preprocessing:
   resize_size: 256
   image_size: 224
@@ -27,6 +30,7 @@ configurations:
     scheduler: cosine
 normalization_sensitivity:
   normalize: true
+  run_only_for_best_optimization: true
 bounded_fallback:
   trigger: no_primary_validation_accuracy_at_least_0.97
   configurations:

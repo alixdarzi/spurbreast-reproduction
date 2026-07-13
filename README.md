@@ -32,10 +32,10 @@ labelled patient-macro metrics, with a transparent discrepancy analysis.
 
 ## Project status
 
-The checksum-verified data audit is complete and passed. Full reproduction
-results will be added only after tests, the checkpoint/resume smoke run,
-Approval Gate 3, and the final GPU runs. No paper result is claimed as
-reproduced yet.
+The checksum-verified audit, 14-test suite, preprocessing inspection, and
+checkpoint/resume smoke run are complete. The project is at Approval Gate 3,
+before expensive GPU training or learned-model test evaluation. No paper
+result is claimed as reproduced yet.
 
 ## Data
 
@@ -56,7 +56,9 @@ Expected published split:
 
 The release was fully decoded and hashed: all 19,926 files are valid 320×320
 grayscale PNGs, with zero duplicate hashes and zero cross-split patient
-overlap. See `docs/DATA_AUDIT.md` and `data/README.md`.
+overlap. See `docs/DATA_AUDIT.md` and `data/README.md`. Gate 3 evidence and the
+remaining budget are in `docs/SMOKE_TEST.md`, `docs/COMPUTE_PLAN.md`, and
+`docs/SUCCESS_CRITERIA.md`.
 
 ## Setup
 

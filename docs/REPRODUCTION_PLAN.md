@@ -57,3 +57,14 @@ unresolved disagreement with the published test metrics.
 - Verify resume by intentionally pausing the two-epoch smoke run after epoch 0
   and completing epoch 1 from `latest.pt`.
 - Stop before full training at Approval Gate 3.
+
+## Approval Gate 3 execution order
+
+1. Screen H1–H4 for 10 epochs each using training and validation only.
+2. Run the normalization sensitivity for 10 epochs only with the winning
+   optimization setup. Run F1–F2 only if no primary setup reaches 0.97
+   validation accuracy.
+3. Commit the locked preprocessing, optimizer, learning rate, weight decay,
+   and checkpoint rule before any learned-model test evaluation.
+4. Train the locked 50-epoch setup for seeds 2025, 2026, and 2027.
+5. Evaluate every locked seed once; never select seeds or thresholds on test.
