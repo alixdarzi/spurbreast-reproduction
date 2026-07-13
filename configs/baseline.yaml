@@ -1,0 +1,46 @@
+experiment:
+  name: field_strength_erm_h1
+  seed: 2025
+  deterministic: true
+data:
+  dataset_dir: data/raw/field_strength
+  metadata_file: data/raw/Clinical_and_Other_Features.xlsx
+  manifest_file: data/interim/field_strength_manifest.csv
+  image_size: 224
+  resize_size: 256
+  normalize: false
+  batch_size: 32
+  num_workers: 4
+model:
+  architecture: resnet50
+  weights: IMAGENET1K_V1
+  num_classes: 2
+  freeze_backbone: false
+training:
+  epochs: 50
+  optimizer: adamw
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  momentum: 0.0
+  scheduler: constant
+  amp: false
+  max_train_batches: null
+  max_eval_batches: null
+  checkpoint_every: 1
+selection:
+  metric: accuracy
+  mode: max
+evaluation:
+  threshold: 0.5
+  bootstrap_resamples: 2000
+paths:
+  checkpoints: checkpoints
+  results: results
+  registry: experiments/registry.csv
+download:
+  archive_url: https://zenodo.org/records/17128791/files/field_strength.zip?download=1
+  archive_file: data/raw/field_strength.zip
+  archive_md5: dbe61da7dc7b06c69c10dbbea0a13b40
+  archive_bytes: 905891386
+  metadata_url: https://wiki.cancerimagingarchive.net/download/attachments/70226903/Clinical_and_Other_Features.xlsx
+  metadata_file: data/raw/Clinical_and_Other_Features.xlsx

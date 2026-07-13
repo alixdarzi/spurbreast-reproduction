@@ -1,0 +1,1 @@
+run_id,started_at,finished_at,status,config_path,config_sha256,git_commit,dataset_md5,seed,device,runtime_seconds,best_epoch,best_val_accuracy,result_path,notes

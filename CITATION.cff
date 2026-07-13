@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this reproduction, cite both this repository and the original SpurBreast paper."
+title: "SpurBreast Magnetic Field-Strength Reproduction"
+type: software
+version: 0.1.0
+date-released: 2026-07-13
+license: MIT
+authors:
+  - family-names: "Reproduction contributors"
+preferred-citation:
+  type: conference-paper
+  title: "SpurBreast: A Curated Dataset for Investigating Spurious Correlations in Real-world Breast MRI Classification"
+  authors:
+    - family-names: "Won"
+      given-names: "Jong Bum"
+    - family-names: "De Neve"
+      given-names: "Wesley"
+    - family-names: "Vankerschaver"
+      given-names: "Joris"
+    - family-names: "Ozbulak"
+      given-names: "Utku"
+  year: 2025
+  collection-title: "Medical Image Computing and Computer Assisted Intervention — MICCAI 2025"
+  doi: "10.1007/978-3-032-05325-1_53"

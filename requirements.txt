@@ -1,0 +1,11 @@
+# Shared Python 3.11 dependencies. Install a platform-specific PyTorch file
+# (`requirements-local-cpu.txt`) or use Colab's preinstalled GPU build.
+numpy==1.26.4
+pillow==10.4.0
+PyYAML==6.0.2
+openpyxl==3.1.5
+tqdm==4.67.1
+matplotlib==3.9.2
+pandas==2.2.3
+scikit-learn==1.5.2
+pytest==8.3.5

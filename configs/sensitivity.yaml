@@ -1,0 +1,43 @@
+protocol: validation_only
+primary_preprocessing:
+  resize_size: 256
+  image_size: 224
+  normalize: false
+configurations:
+  - id: H1
+    optimizer: adamw
+    learning_rate: 0.0001
+    weight_decay: 0.0001
+    scheduler: constant
+  - id: H2
+    optimizer: adamw
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    scheduler: constant
+  - id: H3
+    optimizer: adam
+    learning_rate: 0.0001
+    weight_decay: 0.0
+    scheduler: constant
+  - id: H4
+    optimizer: sgd
+    learning_rate: 0.01
+    weight_decay: 0.0001
+    momentum: 0.0
+    scheduler: cosine
+normalization_sensitivity:
+  normalize: true
+bounded_fallback:
+  trigger: no_primary_validation_accuracy_at_least_0.97
+  configurations:
+    - id: F1
+      optimizer: adamw
+      learning_rate: 0.00001
+      weight_decay: 0.00001
+      scheduler: constant
+    - id: F2
+      optimizer: sgd
+      learning_rate: 0.001
+      weight_decay: 0.0001
+      momentum: 0.0
+      scheduler: cosine

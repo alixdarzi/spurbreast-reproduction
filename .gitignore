@@ -1,0 +1,43 @@
+# Data and generated artifacts
+data/raw/*
+data/interim/*
+data/processed/*
+data/splits/*
+checkpoints/*
+results/*
+reports/figures/*
+reports/tables/*
+
+# Preserve directory documentation/placeholders
+!data/**/README.md
+!data/splits/.gitkeep
+!checkpoints/.gitkeep
+!results/.gitkeep
+!reports/figures/.gitkeep
+!reports/tables/.gitkeep
+!reports/tables/data_audit_summary.json
+!reports/tables/shortcut_baselines.json
+
+# Python
+.venv/
+.tools/
+.python/
+.cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Notebooks and editors
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# Local configuration and secrets
+.env
+*.local.yaml
+
+# OS files
+.DS_Store
+Thumbs.db

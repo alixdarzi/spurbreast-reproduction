@@ -1,0 +1,15 @@
+experiment:
+  name: groupdro_extension
+  status: proposed_not_approved_for_execution
+method:
+  baseline: erm
+  comparison: groupdro
+  group_definition: [tumor_label, field_strength]
+  require_all_four_training_groups: true
+evaluation:
+  stratify_by: field_strength
+  calibration_metrics: [nll, brier, ece]
+  calibration_fit_split: validation
+notes:
+  - The published field-strength training split contains only two of four groups.
+  - A separately approved counterexample pool is required for a mitigation claim.
