@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import json
 import sys
 from pathlib import Path
 
@@ -28,7 +27,7 @@ from spurbreast_repro.metrics import (  # noqa: E402
     stratified_metrics,
 )
 from spurbreast_repro.models import build_model  # noqa: E402
-from spurbreast_repro.utils import seed_everything, write_json  # noqa: E402
+from spurbreast_repro.utils import json_dumps, seed_everything, write_json  # noqa: E402
 
 
 def main() -> None:
@@ -120,7 +119,7 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=list(prediction_rows[0]))
         writer.writeheader()
         writer.writerows(prediction_rows)
-    print(json.dumps(output, indent=2, sort_keys=True))
+    print(json_dumps(output, indent=2))
 
 
 if __name__ == "__main__":

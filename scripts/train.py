@@ -20,6 +20,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from spurbreast_repro.config import config_sha256, load_config, project_path  # noqa: E402
 from spurbreast_repro.data import (  # noqa: E402
     SpurBreastDataset,
+    balanced_record_prefix,
     build_transform,
     discover_records,
     load_field_map,
@@ -33,6 +34,7 @@ from spurbreast_repro.utils import (  # noqa: E402
     capture_rng_state,
     environment_summary,
     git_commit,
+    json_dumps,
     restore_rng_state,
     seed_everything,
     seed_worker,
@@ -110,7 +112,12 @@ def make_loaders(config: dict[str, Any], seed: int):
             resize_size=int(data_config["resize_size"]),
             normalize=bool(data_config["normalize"]),
         )
-        dataset = SpurBreastDataset(discover_records(dataset_dir, split, field_map), transform)
+        records = discover_records(dataset_dir, split, field_map)
+        max_eval_batches = config["training"].get("max_eval_batches")
+        if split == "validation" and max_eval_batches is not None:
+            smoke_examples = int(max_eval_batches) * int(data_config["batch_size"])
+            records = balanced_record_prefix(records, smoke_examples)
+        dataset = SpurBreastDataset(records, transform)
         workers = int(data_config["num_workers"])
         loaders[split] = DataLoader(
             dataset,
@@ -294,7 +301,7 @@ def main() -> None:
                 "best_epoch": best_epoch,
             }
             append_jsonl(history_path, row)
-            print(json.dumps(row, sort_keys=True))
+            print(json_dumps(row))
             if args.stop_after_epoch is not None and epoch >= args.stop_after_epoch:
                 stopped_for_resume = epoch < int(config["training"]["epochs"]) - 1
                 break

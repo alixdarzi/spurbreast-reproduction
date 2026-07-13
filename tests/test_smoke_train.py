@@ -5,7 +5,7 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
 from spurbreast_repro.engine import evaluate_loader, train_one_epoch
-from spurbreast_repro.utils import atomic_torch_save, write_json
+from spurbreast_repro.utils import atomic_torch_save, json_dumps, write_json
 
 
 class TinyDataset(Dataset):
@@ -46,3 +46,4 @@ def test_one_training_and_evaluation_step_and_atomic_checkpoint(tmp_path: Path) 
     strict_json = tmp_path / "metrics.json"
     write_json(strict_json, {"undefined_ppv": float("nan")})
     assert strict_json.read_text(encoding="utf-8").strip() == '{\n  "undefined_ppv": null\n}'
+    assert json_dumps({"undefined_ppv": float("nan")}) == '{"undefined_ppv": null}'

@@ -95,11 +95,18 @@ def write_json(path: str | Path, payload: Any) -> None:
     os.replace(temporary, path)
 
 
+def json_dumps(payload: Any, *, indent: int | None = None) -> str:
+    """Serialize metrics as standards-compliant JSON, mapping NaN/inf to null."""
+    return json.dumps(
+        _json_safe(payload), indent=indent, sort_keys=True, allow_nan=False
+    )
+
+
 def append_jsonl(path: str | Path, payload: Any) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
-        handle.write(json.dumps(_json_safe(payload), sort_keys=True, allow_nan=False) + "\n")
+        handle.write(json_dumps(payload) + "\n")
 
 
 def git_commit(project_root: str | Path) -> str:

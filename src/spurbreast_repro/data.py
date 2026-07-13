@@ -79,6 +79,29 @@ def discover_records(
     return records
 
 
+def balanced_record_prefix(
+    records: Iterable[SliceRecord], total: int
+) -> list[SliceRecord]:
+    """Return a deterministic, label-interleaved subset for bounded smoke evaluation."""
+    if total <= 0:
+        raise ValueError("total must be positive")
+    grouped = {0: [], 1: []}
+    for record in records:
+        grouped[record.label].append(record)
+    if not grouped[0] or not grouped[1]:
+        raise ValueError("balanced smoke subset requires both labels")
+    selected: list[SliceRecord] = []
+    index = 0
+    while len(selected) < total and (
+        index < len(grouped[0]) or index < len(grouped[1])
+    ):
+        for label in (0, 1):
+            if index < len(grouped[label]) and len(selected) < total:
+                selected.append(grouped[label][index])
+        index += 1
+    return selected
+
+
 def build_transform(
     split: str,
     image_size: int = 224,

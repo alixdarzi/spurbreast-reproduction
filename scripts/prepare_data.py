@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
-import json
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -18,7 +17,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from spurbreast_repro.config import load_config, project_path  # noqa: E402
 from spurbreast_repro.data import SPLITS, SliceRecord, discover_records  # noqa: E402
-from spurbreast_repro.utils import write_json  # noqa: E402
+from spurbreast_repro.utils import json_dumps, write_json  # noqa: E402
 
 
 EXPECTED_IMAGES = {
@@ -230,7 +229,7 @@ def main() -> None:
     summary["metadata_cohort_patients"] = len(field_map)
     report_path = PROJECT_ROOT / "reports" / "tables" / "data_audit_summary.json"
     write_json(report_path, summary)
-    print(json.dumps(summary, indent=2, sort_keys=True))
+    print(json_dumps(summary, indent=2))
     if summary["status"] != "passed":
         raise SystemExit(1)
 
