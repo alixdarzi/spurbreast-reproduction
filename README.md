@@ -67,8 +67,9 @@ remaining budget are in `docs/SMOKE_TEST.md`, `docs/COMPUTE_PLAN.md`, and
 
 ## Setup
 
-Python 3.11 is the supported local environment. The verified Phase 4 smoke
-environment is CPU-only:
+Python 3.11 is the verified local environment. The package supports Python
+3.10-3.12 so it also installs on the current Colab Python 3.12 runtime. The
+verified Phase 4 smoke environment is CPU-only:
 
 ```powershell
 python -m pip install -r requirements-local-cpu.txt

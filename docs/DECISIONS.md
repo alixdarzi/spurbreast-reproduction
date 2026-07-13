@@ -83,3 +83,13 @@ Selection reads validation summaries only. F1–F2 run only below the declared
 0.97 validation-accuracy trigger; normalization runs only for the winning
 optimization. Three expanded 50-epoch seed configs are generated only after
 the selector reaches `ready_to_lock`, and must be committed before test access.
+
+## 2026-07-13 — Colab Python 3.12 compatibility
+
+The hosted Colab T4 runtime presented Python 3.12, while the initial package
+metadata declared support only through Python 3.11. The already-pinned shared
+dependencies support Python 3.12, so `requires-python` was widened from
+`>=3.10,<3.12` to `>=3.10,<3.13`; no scientific configuration or dependency
+version changed. The persistent notebook now requires a clean tracked worktree
+and performs a fast-forward-only pull from `origin/main` on setup so resumed
+sessions cannot silently run stale source code.
