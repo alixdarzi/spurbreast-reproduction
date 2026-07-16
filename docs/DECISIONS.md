@@ -103,3 +103,18 @@ ImageNet-normalized counterpart reached 0.9916 and 0.0279, so the frozen
 `final_winner` is `H4_norm`. The 0.97 fallback threshold was exceeded and F1–F2
 were not run. Locked configs use 50 epochs and seeds 2025, 2026, and 2027;
 `LOCK.json` records `test_status: not_evaluated`.
+
+## 2026-07-16 — Colab ephemeral local data cache
+
+The first seed-2026 attempt produced no history or checkpoint because random
+reads from mounted Drive left the data-loader workers blocked. It was stopped
+before any completed epoch. The official archive was copied to ephemeral Colab
+local disk, its published MD5 was reverified, and exactly 19,926 PNGs were
+extracted. The unchanged extracted tree is bind-mounted over the configured
+project-relative `data/raw/field_strength` directory during training.
+
+This is an operational I/O optimization only: no config, manifest, image byte,
+cohort, split, sample order, transform, model, optimizer, seed, checkpoint rule,
+or metric changed. Results, checkpoints, and registry records remain
+Drive-persistent. The cache and bind mount must be rebuilt after a runtime
+reset. The test split remains unevaluated.
