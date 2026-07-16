@@ -118,3 +118,18 @@ cohort, split, sample order, transform, model, optimizer, seed, checkpoint rule,
 or metric changed. Results, checkpoints, and registry records remain
 Drive-persistent. The cache and bind mount must be rebuilt after a runtime
 reset. The test split remains unevaluated.
+
+## 2026-07-16 — Free Colab disconnect during seed 2027
+
+Locked seed 2026 completed all 50 epochs and the continuation cell started seed
+2027 automatically. Seed 2027's persisted history was directly verified at 20
+completed epochs before the hosted runtime later disconnected. Immediate GPU
+reconnect attempts returned `Unable to connect to the runtime`.
+
+The conservative resume boundary is therefore seed 2027 epoch 20/50, although
+the epoch-boundary checkpoint on Drive may be newer because training continued
+after the last direct check. On reconnect, audit the persisted history and
+checkpoint metadata first, rebuild the checksum-verified ephemeral data cache,
+and let `scripts/run_or_resume.py` select the newest provenance-matched
+checkpoint. Do not restart from an earlier epoch manually, change the locked
+configuration, or access test results. Seed 2026 must be skipped as completed.

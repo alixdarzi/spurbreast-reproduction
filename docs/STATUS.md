@@ -14,11 +14,12 @@ H4 (SGD, learning rate 0.01, cosine schedule) won the optimizer screen, and its
 prespecified normalized counterpart improved both validation accuracy and NLL.
 The final winner is therefore `H4_norm`. The three 50-epoch seed configs and
 their hashes are written under `configs/locked/`, with
-`test_status: not_evaluated`. Locked seed 2025 completed all 50 epochs and its
-best checkpoint is safely persisted on Drive. Seed 2026 is running on a Colab
-T4 and has completed at least its first epoch; seed 2027 is queued to start
-automatically after it. No learned checkpoint has been evaluated on the test
-split, so no Table 2 reproduction result is claimed yet.
+`test_status: not_evaluated`. Locked seeds 2025 and 2026 completed all 50
+epochs, and their checkpoints are safely persisted on Drive. Seed 2027 started
+automatically; 20 completed epochs were directly verified before the free
+Colab runtime disconnected. The persisted latest checkpoint may be newer and
+will be audited on reconnect. No learned checkpoint has been evaluated on the
+test split, so no Table 2 reproduction result is claimed yet.
 
 ## Verified scientific and data facts
 
@@ -65,17 +66,19 @@ the final winner is `H4_norm`. These results are recorded in
 | Seed | Epochs | Status | Best epoch | Best val accuracy | Best val NLL | Runtime |
 |---:|---:|---|---:|---:|---:|---:|
 | 2025 | 50/50 | Completed | 33 | 0.9871 | 0.0423 | 7,488 s (2 h 5 min) |
-| 2026 | 1/50+ | Running | 0 | 0.9494 | 0.1337 | In progress |
-| 2027 | 0/50 | Queued automatically | — | — | — | — |
+| 2026 | 50/50 | Completed | Pending summary audit | — | — | About 1 h 48 min |
+| 2027 | 20/50+ verified | Runtime disconnected | Pending resume audit | — | — | Partial |
 
 Seed 2025 used the committed `H4_norm` lock and completed with return code 0.
 Its result directory is
 `locked_table2_field_strength_resnet50-seed2025-20260713T175147Z`. Seed 2026
-is writing to
-`locked_table2_field_strength_resnet50-seed2026-20260716T135531Z`; its first
-completed validation pass reported accuracy 0.9494, PPV 0.9631, NPV 0.9364,
-and NLL 0.1337. These are interim validation results only. The test split
-remains unseen.
+completed in
+`locked_table2_field_strength_resnet50-seed2026-20260716T135531Z`; its
+`history.jsonl` was directly verified at 50 records with final zero-based epoch
+index 49. Seed 2027 is in
+`locked_table2_field_strength_resnet50-seed2027-20260716T154311Z`; its history
+was directly verified at 20 records with final zero-based epoch index 19. The
+test split remains unseen.
 
 ## Completed engineering safeguards
 
@@ -121,30 +124,47 @@ checkpoints, and registry records still persist to Drive. This runtime-only I/O
 change does not alter the archive, manifests, split, sample order, transforms,
 model, optimizer, or seeds. It must be recreated after a runtime reset.
 
-Seed 2026 then completed its first epoch normally and continues to use the GPU.
-The same notebook cell starts seed 2027 automatically after seed 2026 exits
-successfully. The final-evaluation cell still has `ALLOW_FINAL_TEST = False`
-and has never run.
+Seed 2026 completed all 50 epochs normally. The same notebook cell then started
+seed 2027 automatically. Seed 2027 reached at least 20 completed epochs; the
+hosted runtime remained active after that direct check, so a newer persisted
+checkpoint may exist. Later that evening the runtime disconnected. Two
+reconnect attempts returned `Unable to connect to the runtime`, consistent
+with a temporary free-tier availability or usage limit.
+
+The notebook reports `All changes saved`. Results and epoch-boundary latest/best
+checkpoints were written to Drive, so the resume wrapper can safely inspect and
+continue the newest compatible seed-2027 run. The conservative known-safe
+boundary is 20/50; do not assume later epochs until the Drive files are audited
+after reconnect. The final-evaluation cell still has
+`ALLOW_FINAL_TEST = False` and has never run.
 
 ## Exact next execution procedure
 
-1. Keep the current Colab T4 runtime connected while seed 2026 runs; seed 2027
-   will start automatically when seed 2026 completes successfully.
-2. If Colab disconnects, reconnect, rebuild and verify the ephemeral local data
-   cache, restore its bind mount, and rerun the same cell. The resume wrapper
-   will continue the incomplete locked seed from its latest epoch checkpoint.
-3. Do not inspect test metrics during either seed run.
-4. Confirm all three best checkpoints and completed summaries exist.
-5. Perform the single authorized evaluation of train, validation, and test for
+1. Retry Colab later and require a GPU runtime; do not continue this locked run
+   on CPU.
+2. Mount Drive, run the setup cell, and verify the repository/config lock. A
+   fast-forward pull containing documentation-only updates is acceptable.
+3. Inspect the persisted seed-2027 `history.jsonl`, `latest.pt`, `best.pt`, and
+   summary before launching anything. Treat 20/50 as the conservative boundary
+   until this audit establishes a newer completed epoch.
+4. Rebuild the ephemeral local data cache from the existing official archive,
+   reverify MD5 `dbe61da7dc7b06c69c10dbbea0a13b40`, confirm 19,926 PNGs,
+   and restore the bind mount over project-relative
+   `data/raw/field_strength`.
+5. Rerun the locked-seed continuation cell. The wrapper should skip completed
+   seed 2026 and resume seed 2027 from its newest provenance-matched checkpoint.
+6. Do not inspect or evaluate the test split while seed 2027 is incomplete.
+7. Confirm all three best checkpoints and completed summaries exist.
+8. Perform the single authorized evaluation of train, validation, and test for
    each locked seed. Do not use test outcomes to change preprocessing, training,
    checkpoint selection, thresholds, or seed inclusion.
-6. Aggregate global, patient-macro, and field-strength-stratified metrics,
+9. Aggregate global, patient-macro, and field-strength-stratified metrics,
    calibration, confidence intervals, and across-seed variability.
 
 ## Remaining work
 
-- Finish locked seed 2026, which is currently running.
-- Run locked seed 2027 automatically after seed 2026.
+- Reconnect to a Colab GPU and audit the newest persisted seed-2027 checkpoint.
+- Resume and finish locked seed 2027; at least 20/50 epochs are verified.
 - Perform the single locked train/validation/test evaluation.
 - Aggregate global and field-strength-stratified metrics, calibration,
   uncertainty intervals, and seed variability.
@@ -152,8 +172,9 @@ and has never run.
   additional manageable extension after the primary reproduction is secure.
 - Complete the final report, figures, limitations, and portfolio presentation.
 
-Based on seed 2025's measured 2-hour-5-minute runtime, seeds 2026 and 2027
-require roughly 4.2 GPU-hours in total from the start of seed 2026. Local data
-caching may reduce that time. Budget approximately 4–6 remaining Colab
-GPU-hours for both locked runs, evaluation, and operational overhead, assuming
-the current hosted runtime remains connected.
+Seed 2026 completed in roughly 1 hour 48 minutes with local data caching. From
+the conservative seed-2027 boundary of 20/50, at most about 65 minutes of
+locked training remain at the observed rate; a newer persisted checkpoint may
+reduce this. Budget 2–4 available Colab GPU-hours for resume validation, the
+remaining training, locked evaluation, and operational overhead. This excludes
+free-tier quota recovery and service queueing.
