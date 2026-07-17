@@ -16,9 +16,9 @@ The final winner is therefore `H4_norm`. The three 50-epoch seed configs and
 their hashes are written under `configs/locked/`, with
 `test_status: not_evaluated`. Locked seeds 2025 and 2026 completed all 50
 epochs, and their checkpoints are safely persisted on Drive. Seed 2027 resumed
-successfully on a new Colab T4 on 2026-07-17 and has completed 36/50 epochs.
-No learned checkpoint has been evaluated on the test split, so no Table 2
-reproduction result is claimed yet.
+successfully on a new Colab T4 on 2026-07-17 and completed all 50 epochs. All
+three locked seeds are now complete. No learned checkpoint has been evaluated
+on the test split, so no Table 2 reproduction result is claimed yet.
 
 ## Verified scientific and data facts
 
@@ -66,7 +66,7 @@ the final winner is `H4_norm`. These results are recorded in
 |---:|---:|---|---:|---:|---:|---:|
 | 2025 | 50/50 | Completed | 33 | 0.9871 | 0.0423 | 7,488 s (2 h 5 min) |
 | 2026 | 50/50 | Completed | Pending summary audit | — | — | About 1 h 48 min |
-| 2027 | 36/50 | Running after verified resume | Pending completion | — | — | In progress |
+| 2027 | 50/50 | Completed after verified resume | 11 | 0.9911 | 0.0303 | Across two sessions |
 
 Seed 2025 used the committed `H4_norm` lock and completed with return code 0.
 Its result directory is
@@ -76,8 +76,9 @@ completed in
 `history.jsonl` was directly verified at 50 records with final zero-based epoch
 index 49. Seed 2027 is in
 `locked_table2_field_strength_resnet50-seed2027-20260716T154311Z`; after resume,
-its history was directly verified at 36 records with final zero-based epoch
-index 35. The test split remains unseen.
+its history was directly verified at 50 records and its summary status is
+`completed`. Its selected validation checkpoint is zero-based epoch 11 with
+accuracy 0.9911 and NLL 0.0303. The test split remains unseen.
 
 ## Completed engineering safeguards
 
@@ -142,31 +143,23 @@ loading rejected the saved NumPy RNG state, and direct CUDA mapping moved the
 DataLoader generator state off CPU. The trusted project-checkpoint loader now
 uses `weights_only=False` with CPU staging; commits `74c7aed` and `34e0f9e`
 record the fix. Both local and Colab suites passed all 16 tests. The experiment
-registry was preserved byte-for-byte during the fast-forward update, the local
-data cache again matched the official MD5 and 19,926-image count, and the first
-new epoch completed successfully. Seed 2027 is now running from 36/50 with the
-T4 observed at 100% utilization and 3,491 MiB GPU memory.
+registry was preserved byte-for-byte during the fast-forward update, and the
+local data cache again matched the official MD5 and 19,926-image count. The T4
+was observed at 100% utilization and 3,491 MiB GPU memory. Seed 2027 then
+completed all remaining epochs; the final-evaluation cell stayed disabled.
 
 ## Exact next execution procedure
 
-1. Keep the current Colab T4 runtime and browser tab connected while seed 2027
-   finishes epochs 37–50.
-2. If Colab disconnects again, remount Drive, rebuild the checksum-verified
-   ephemeral local data cache, and let the wrapper resume the newest
-   provenance-matched `latest.pt`; do not restart manually.
-3. Do not inspect or evaluate the test split while seed 2027 is incomplete.
-4. After seed 2027 completes, verify its 50-line history, completed summary,
-   and latest/best checkpoint metadata.
-5. Confirm all three best checkpoints and completed summaries exist.
-6. Perform the single authorized evaluation of train, validation, and test for
+1. Confirm all three histories, completed summaries, and best/latest checkpoint
+   metadata are present and provenance-matched.
+2. Perform the single authorized evaluation of train, validation, and test for
    each locked seed. Do not use test outcomes to change preprocessing, training,
    checkpoint selection, thresholds, or seed inclusion.
-7. Aggregate global, patient-macro, and field-strength-stratified metrics,
+3. Aggregate global, patient-macro, and field-strength-stratified metrics,
    calibration, confidence intervals, and across-seed variability.
 
 ## Remaining work
 
-- Finish locked seed 2027; 36/50 epochs are verified and training is active.
 - Perform the single locked train/validation/test evaluation.
 - Aggregate global and field-strength-stratified metrics, calibration,
   uncertainty intervals, and seed variability.
@@ -174,8 +167,6 @@ T4 observed at 100% utilization and 3,491 MiB GPU memory.
   additional manageable extension after the primary reproduction is secure.
 - Complete the final report, figures, limitations, and portfolio presentation.
 
-Seed 2026 completed in roughly 1 hour 48 minutes with local data caching. From
-the verified seed-2027 boundary of 36/50, roughly 30–40 minutes of locked
-training remain at the observed rate. Budget 1–2 available Colab GPU-hours for
-completion checks and locked evaluation, assuming the current runtime stays
-connected. This excludes free-tier quota recovery and service queueing.
+All locked training is complete. Budget about 1–2 available Colab GPU-hours for
+checkpoint audits, the single locked evaluation, aggregation, and operational
+overhead. This excludes free-tier quota recovery and service queueing.
