@@ -7,6 +7,7 @@ checkpoints/*
 results/*
 reports/figures/*
 reports/tables/*
+reports/final_results/*
 
 # Preserve directory documentation/placeholders
 !data/**/README.md
@@ -18,6 +19,9 @@ reports/tables/*
 !reports/tables/data_audit_summary.json
 !reports/tables/shortcut_baselines.json
 !reports/tables/sensitivity_selection.json
+!reports/final_results/*.csv
+!reports/final_results/*.json
+!reports/final_results/*.png
 
 # Python
 .venv/
