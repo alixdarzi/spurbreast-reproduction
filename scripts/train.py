@@ -234,7 +234,7 @@ def main() -> None:
         best_accuracy = float("-inf")
         best_nll = float("inf")
         if args.resume:
-            state = load_trusted_checkpoint(args.resume, map_location=device)
+            state = load_trusted_checkpoint(args.resume)
             if state["config_sha256"] != config_sha256(config):
                 raise RuntimeError("Resume checkpoint configuration does not match")
             model.load_state_dict(state["model_state"])

@@ -52,7 +52,7 @@ def main() -> None:
         raise RuntimeError("CUDA requested but unavailable")
     device_name = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
     device = torch.device("cpu" if device_name == "auto" else device_name)
-    checkpoint = load_trusted_checkpoint(args.checkpoint, map_location=device)
+    checkpoint = load_trusted_checkpoint(args.checkpoint)
     if checkpoint["config_sha256"] != config_sha256(config):
         raise RuntimeError("Evaluation configuration does not match checkpoint")
     model_config = dict(config["model"])

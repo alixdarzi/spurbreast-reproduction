@@ -45,14 +45,23 @@ def test_one_training_and_evaluation_step_and_atomic_checkpoint(tmp_path: Path) 
     assert training["n"] == 4
     assert evaluation["metrics"]["n"] == 4
     checkpoint = tmp_path / "latest.pt"
+    loader_generator = torch.Generator()
+    loader_generator.manual_seed(2027)
     atomic_torch_save(
-        {"model_state": model.state_dict(), "rng_state": capture_rng_state()},
+        {
+            "model_state": model.state_dict(),
+            "rng_state": capture_rng_state(),
+            "loader_generator_state": loader_generator.get_state(),
+        },
         checkpoint,
     )
     assert checkpoint.is_file()
-    restored = load_trusted_checkpoint(checkpoint, map_location="cpu")
+    restored = load_trusted_checkpoint(checkpoint)
     assert set(restored["model_state"]) == set(model.state_dict())
     assert restored["rng_state"]["numpy"][0] == "MT19937"
+    restored_generator = torch.Generator()
+    restored_generator.set_state(restored["loader_generator_state"])
+    assert restored_generator.initial_seed() == 2027
     strict_json = tmp_path / "metrics.json"
     write_json(strict_json, {"undefined_ppv": float("nan")})
     assert strict_json.read_text(encoding="utf-8").strip() == '{\n  "undefined_ppv": null\n}'

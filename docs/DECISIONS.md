@@ -139,8 +139,11 @@ configuration, or access test results. Seed 2026 must be skipped as completed.
 The resumed Colab runtime supplied PyTorch 2.11, whose default restricted
 checkpoint loader rejected the NumPy RNG state saved for exact epoch-boundary
 resume. The project now loads only its own provenance-checked training and
-evaluation checkpoints with `weights_only=False`. This explicitly preserves
-the historical behavior required for optimizer, scaler, DataLoader generator,
-and RNG restoration. It does not change model weights, training configuration,
-data, splits, metrics, or checkpoint selection. A regression test covers a
-checkpoint containing NumPy RNG state.
+evaluation checkpoints with `weights_only=False` and stages all checkpoint
+tensors on CPU. CPU staging is required because DataLoader and RNG generator
+states must remain CPU byte tensors; model and optimizer loaders perform their
+normal device transfer afterward. This explicitly preserves the historical
+behavior required for optimizer, scaler, DataLoader generator, and RNG
+restoration. It does not change model weights, training configuration, data,
+splits, metrics, or checkpoint selection. A regression test covers NumPy RNG
+and DataLoader generator state.
