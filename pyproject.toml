@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "spurbreast-repro"
+name = "breast-mri-field-strength-bias"
 version = "0.1.0"
-description = "Close reproduction of the SpurBreast field-strength shortcut experiment"
+description = "Reproducible analysis of magnetic-field-strength shortcut learning in breast MRI"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
 license = {text = "MIT"}
