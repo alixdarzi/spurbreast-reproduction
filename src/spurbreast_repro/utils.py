@@ -75,6 +75,13 @@ def atomic_torch_save(payload: dict[str, Any], destination: str | Path) -> None:
         temporary_path.unlink(missing_ok=True)
 
 
+def load_trusted_checkpoint(
+    path: str | Path, *, map_location: str | torch.device
+) -> dict[str, Any]:
+    """Load a checkpoint created by this project, including saved RNG state."""
+    return torch.load(path, map_location=map_location, weights_only=False)
+
+
 def _json_safe(payload: Any) -> Any:
     if isinstance(payload, float) and not math.isfinite(payload):
         return None

@@ -27,7 +27,12 @@ from spurbreast_repro.metrics import (  # noqa: E402
     stratified_metrics,
 )
 from spurbreast_repro.models import build_model  # noqa: E402
-from spurbreast_repro.utils import json_dumps, seed_everything, write_json  # noqa: E402
+from spurbreast_repro.utils import (  # noqa: E402
+    json_dumps,
+    load_trusted_checkpoint,
+    seed_everything,
+    write_json,
+)
 
 
 def main() -> None:
@@ -47,7 +52,7 @@ def main() -> None:
         raise RuntimeError("CUDA requested but unavailable")
     device_name = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
     device = torch.device("cpu" if device_name == "auto" else device_name)
-    checkpoint = torch.load(args.checkpoint, map_location=device)
+    checkpoint = load_trusted_checkpoint(args.checkpoint, map_location=device)
     if checkpoint["config_sha256"] != config_sha256(config):
         raise RuntimeError("Evaluation configuration does not match checkpoint")
     model_config = dict(config["model"])

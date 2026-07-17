@@ -133,3 +133,14 @@ checkpoint metadata first, rebuild the checksum-verified ephemeral data cache,
 and let `scripts/run_or_resume.py` select the newest provenance-matched
 checkpoint. Do not restart from an earlier epoch manually, change the locked
 configuration, or access test results. Seed 2026 must be skipped as completed.
+
+## 2026-07-17 — Trusted checkpoint loading on newer PyTorch
+
+The resumed Colab runtime supplied PyTorch 2.11, whose default restricted
+checkpoint loader rejected the NumPy RNG state saved for exact epoch-boundary
+resume. The project now loads only its own provenance-checked training and
+evaluation checkpoints with `weights_only=False`. This explicitly preserves
+the historical behavior required for optimizer, scaler, DataLoader generator,
+and RNG restoration. It does not change model weights, training configuration,
+data, splits, metrics, or checkpoint selection. A regression test covers a
+checkpoint containing NumPy RNG state.

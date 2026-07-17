@@ -5,7 +5,13 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
 from spurbreast_repro.engine import evaluate_loader, train_one_epoch
-from spurbreast_repro.utils import atomic_torch_save, json_dumps, write_json
+from spurbreast_repro.utils import (
+    atomic_torch_save,
+    capture_rng_state,
+    json_dumps,
+    load_trusted_checkpoint,
+    write_json,
+)
 
 
 class TinyDataset(Dataset):
@@ -39,10 +45,14 @@ def test_one_training_and_evaluation_step_and_atomic_checkpoint(tmp_path: Path) 
     assert training["n"] == 4
     assert evaluation["metrics"]["n"] == 4
     checkpoint = tmp_path / "latest.pt"
-    atomic_torch_save({"model_state": model.state_dict()}, checkpoint)
+    atomic_torch_save(
+        {"model_state": model.state_dict(), "rng_state": capture_rng_state()},
+        checkpoint,
+    )
     assert checkpoint.is_file()
-    restored = torch.load(checkpoint, map_location="cpu")
+    restored = load_trusted_checkpoint(checkpoint, map_location="cpu")
     assert set(restored["model_state"]) == set(model.state_dict())
+    assert restored["rng_state"]["numpy"][0] == "MT19937"
     strict_json = tmp_path / "metrics.json"
     write_json(strict_json, {"undefined_ppv": float("nan")})
     assert strict_json.read_text(encoding="utf-8").strip() == '{\n  "undefined_ppv": null\n}'
