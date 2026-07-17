@@ -1,172 +1,71 @@
 # Project checkpoint and resume status
 
-Last updated: 2026-07-16 (Asia/Tehran)
+Last updated: 2026-07-17 (Asia/Tehran)
 
 ## Current state
 
-The evidence review, reproduction protocol, repository implementation, released
-archive audit, preprocessing inspection, regression tests, and real-data CPU
-checkpoint/resume smoke test are complete. The public repository is available
-at <https://github.com/alixdarzi/spurbreast-reproduction>.
+The primary close reproduction is complete. All three locked ResNet-50 runs
+(seeds 2025, 2026, and 2027) finished 50 epochs, their validation-selected
+checkpoints were evaluated once on training, validation, and test, and the
+de-identified aggregate tables and figures were generated. The private
+per-slice prediction files and checkpoints remain on Google Drive.
 
-The complete validation-only sensitivity screen has finished on a Colab T4.
-H4 (SGD, learning rate 0.01, cosine schedule) won the optimizer screen, and its
-prespecified normalized counterpart improved both validation accuracy and NLL.
-The final winner is therefore `H4_norm`. The three 50-epoch seed configs and
-their hashes are written under `configs/locked/`, with
-`test_status: not_evaluated`. Locked seeds 2025 and 2026 completed all 50
-epochs, and their checkpoints are safely persisted on Drive. Seed 2027 resumed
-successfully on a new Colab T4 on 2026-07-17 and completed all 50 epochs. All
-three locked seeds are now complete. No learned checkpoint has been evaluated
-on the test split, so no Table 2 reproduction result is claimed yet.
+Primary test accuracy is **0.5175 ± 0.0060**, compared with 0.52 in Table 2.
+Validation accuracy is 0.9893 ± 0.0020, producing a 0.4717
+validation-to-test drop. Test predicted-positive rates are 0.8735 at 1.5 T and
+0.0200 at 3 T. These results meet the prespecified close-reproduction criteria
+and reproduce the field-strength shortcut collapse.
 
-## Verified scientific and data facts
+The published test PPV/NPV values are not reproduced: the global results are
+0.5215/0.5148 versus 0.62/0.41. This is retained as a metric-provenance
+limitation because the three paper values cannot coexist in one standard
+confusion matrix on the released balanced test set.
 
-- Target: Table 2, Magnetic Field Strength — ResNet-50.
-- Task: tumor-containing versus non-tumor 2D MRI slice classification among
-  patients with biopsy-confirmed invasive breast cancer; not patient-level
-  cancer diagnosis.
-- Official archive: `field_strength.zip`, 905,891,386 bytes.
-- Verified MD5: `dbe61da7dc7b06c69c10dbbea0a13b40`.
-- Verified SHA-256:
-  `c6c4b6bcc62168cc91c7e44bc0e5e19bff75a1232c7284bc682e0ccb6ce9bafc`.
-- Released data: 19,926 valid 320×320 grayscale PNGs from 700 patients.
-- Split counts: training 9,562 images/400 patients; validation 3,576/150;
-  test 6,788/150.
-- Cross-split patient overlap, corrupt images, duplicate image hashes, and
-  cross-split duplicate hashes: zero.
-- Training and validation have the intended perfect field-strength shortcut;
-  every test patient has both slice labels.
+## Completed stages
+
+- Full paper, official repository, and dataset evidence review.
+- Reproduction protocol, traceability table, assumptions, and compute plan.
+- Checksum-verified 19,926-image audit with 700 patients and no leakage.
+- Preprocessing inspection, tests, smoke training, and checkpoint/resume test.
+- Validation-only sensitivity screen and committed `H4_norm` configuration
+  lock.
+- Three 50-epoch locked training runs.
+- Single authorized train/validation/test evaluation per seed.
+- Slice-micro, patient-macro, patient-cluster, field-strength-stratified, NLL,
+  Brier, ECE, and reliability analysis.
+- Public, de-identified tables and professional figures.
+
+## Locked seed summary
+
+| Seed | Epochs | Best epoch | Best validation accuracy | Test accuracy |
+|---:|---:|---:|---:|---:|
+| 2025 | 50/50 | 33 | 0.9871 | 0.5245 |
+| 2026 | 50/50 | 9 | 0.9897 | 0.5140 |
+| 2027 | 50/50 | 11 | 0.9911 | 0.5141 |
+
+## Reproducibility and privacy state
+
+- Official archive MD5: `dbe61da7dc7b06c69c10dbbea0a13b40`.
 - Audited manifest SHA-256:
   `44b4fa5da873efabc323d0871037da96de494c38020d41c499c644c149d6561e`.
-- The released-split field-strength oracle has test accuracy 0.4573, PPV
-  0.4529, and NPV 0.4609. This audit discrepancy will not be used for tuning.
-- The published balanced-test values 0.52/0.62/0.41 cannot all come from one
-  standard globally pooled confusion matrix. Correct global metrics will be
-  retained, with patient-macro metrics reported separately.
+- Model/checkpoint selection used validation accuracy, lower validation NLL as
+  the tie-breaker, then the earlier epoch.
+- Threshold, preprocessing, seeds, and inclusion rules were not altered after
+  test access.
+- Public result outputs were scanned for patient IDs, image paths, and dataset
+  filenames; the audit was clean.
 
-## Validation-only sensitivity result
+## Remaining optional work
 
-| ID | Optimizer / preprocessing | Best epoch | Val accuracy | Val NLL |
-|---|---|---:|---:|---:|
-| H1 | AdamW, 1e-4, raw input | 4 | 0.9785 | 0.0462 |
-| H2 | AdamW, 1e-3, raw input | 9 | 0.9606 | 0.1048 |
-| H3 | Adam, 1e-4, raw input | 4 | 0.9785 | 0.0462 |
-| H4 | SGD, 0.01, cosine, raw input | 7 | 0.9894 | 0.0319 |
-| H4_norm | H4 with ImageNet normalization | 7 | **0.9916** | **0.0279** |
+The core reproduction is finished. Remaining work is optional extension work:
 
-Selection used validation accuracy, then lower NLL, then the earlier epoch.
-The selector status is `ready_to_lock`, fallback runs were not triggered, and
-the final winner is `H4_norm`. These results are recorded in
-`reports/tables/sensitivity_selection.json`; the test split was not loaded.
+1. ERM versus inverse-group weighting or GroupDRO on a new patient-disjoint
+   extension split with group metrics and calibration.
+2. Anatomy-preserving preprocessing robustness.
 
-## Locked-seed progress
+These extensions require new experiments and must not be presented as part of
+the locked Table 2 reproduction. The GroupDRO comparison is the only remaining
+substantially GPU-expensive stage.
 
-| Seed | Epochs | Status | Best epoch | Best val accuracy | Best val NLL | Runtime |
-|---:|---:|---|---:|---:|---:|---:|
-| 2025 | 50/50 | Completed | 33 | 0.9871 | 0.0423 | 7,488 s (2 h 5 min) |
-| 2026 | 50/50 | Completed | Pending summary audit | — | — | About 1 h 48 min |
-| 2027 | 50/50 | Completed after verified resume | 11 | 0.9911 | 0.0303 | Across two sessions |
-
-Seed 2025 used the committed `H4_norm` lock and completed with return code 0.
-Its result directory is
-`locked_table2_field_strength_resnet50-seed2025-20260713T175147Z`. Seed 2026
-completed in
-`locked_table2_field_strength_resnet50-seed2026-20260716T135531Z`; its
-`history.jsonl` was directly verified at 50 records with final zero-based epoch
-index 49. Seed 2027 is in
-`locked_table2_field_strength_resnet50-seed2027-20260716T154311Z`; after resume,
-its history was directly verified at 50 records and its summary status is
-`completed`. Its selected validation checkpoint is zero-based epoch 11 with
-accuracy 0.9911 and NLL 0.0303. The test split remains unseen.
-
-## Completed engineering safeguards
-
-- Frozen H1–H4 validation-only sensitivity configurations.
-- Resumable runs with provenance and archive/manifest verification.
-- Atomic best/latest checkpoints with optimizer, scaler, random-number, and
-  data-loader state.
-- Validation-only selection and a mandatory committed configuration lock before
-  final seeds or any test evaluation.
-- Patient-disjoint split assertions, deterministic ordering, strict metrics,
-  preprocessing visualization, and tensor-range checks.
-- CPU real-image smoke test paused after epoch 0 and resumed through epoch 1;
-  it constructed no test DataLoader.
-- Regression suite and notebook validation passed before publication.
-- Five validation-only sensitivity runs completed with Drive-persistent
-  checkpoints and registry records; peak observed VRAM stayed below 3.3 GB.
-- The final lock selects `H4_norm` for seeds 2025, 2026, and 2027, keeps the
-  physical batch size at 32, and records `test_status: not_evaluated`.
-
-## Colab checkpoint
-
-Persistent notebook copy:
-<https://colab.research.google.com/drive/1rv8ogoWYrrsLDxdHU2pyOUzoKPGPZgoR>
-
-Changing the VPN route resolved the connection problem. The notebook mounted
-Drive, cloned the repository, verified a Tesla T4 with 14.6 GiB VRAM, installed
-the Python 3.12-compatible project, downloaded and audited the official archive,
-and passed all regression tests. H1, H2, H3, H4, and H4_norm then completed with
-checkpoints and results persisted under Google Drive.
-
-Seed 2025 completed before the hosted runtime disconnected. The free-tier GPU
-quota subsequently recovered, and a fresh Tesla T4 runtime was connected on
-2026-07-16. The Drive clone was verified at the published lock commit with a
-clean tracked worktree. The first seed-2026 attempt stalled before producing an
-epoch because mounted-Drive random reads blocked its data-loader workers; it
-was stopped without discarding any valid completed epoch.
-
-For the replacement run, the checksum-verified official archive was copied to
-ephemeral Colab local disk, its MD5 was reverified, and all 19,926 PNGs were
-extracted. That unchanged extracted tree is bind-mounted over the configured
-project-relative `data/raw/field_strength` path for faster reads. Results,
-checkpoints, and registry records still persist to Drive. This runtime-only I/O
-change does not alter the archive, manifests, split, sample order, transforms,
-model, optimizer, or seeds. It must be recreated after a runtime reset.
-
-Seed 2026 completed all 50 epochs normally. The same notebook cell then started
-seed 2027 automatically. Seed 2027 reached at least 20 completed epochs; the
-hosted runtime remained active after that direct check, so a newer persisted
-checkpoint may exist. Later that evening the runtime disconnected. Two
-reconnect attempts returned `Unable to connect to the runtime`, consistent
-with a temporary free-tier availability or usage limit.
-
-The notebook reports `All changes saved`. Results and epoch-boundary latest/best
-checkpoints were written to Drive, allowing the resume wrapper to inspect and
-continue the newest compatible seed-2027 run. The final-evaluation cell still has
-`ALLOW_FINAL_TEST = False` and has never run.
-
-On 2026-07-17 a new free T4 runtime connected and Drive was remounted. The
-persisted audit found 35 completed epochs and a valid `latest.pt` at zero-based
-epoch 34. PyTorch 2.11 exposed two resume-compatibility issues: restricted
-loading rejected the saved NumPy RNG state, and direct CUDA mapping moved the
-DataLoader generator state off CPU. The trusted project-checkpoint loader now
-uses `weights_only=False` with CPU staging; commits `74c7aed` and `34e0f9e`
-record the fix. Both local and Colab suites passed all 16 tests. The experiment
-registry was preserved byte-for-byte during the fast-forward update, and the
-local data cache again matched the official MD5 and 19,926-image count. The T4
-was observed at 100% utilization and 3,491 MiB GPU memory. Seed 2027 then
-completed all remaining epochs; the final-evaluation cell stayed disabled.
-
-## Exact next execution procedure
-
-1. Confirm all three histories, completed summaries, and best/latest checkpoint
-   metadata are present and provenance-matched.
-2. Perform the single authorized evaluation of train, validation, and test for
-   each locked seed. Do not use test outcomes to change preprocessing, training,
-   checkpoint selection, thresholds, or seed inclusion.
-3. Aggregate global, patient-macro, and field-strength-stratified metrics,
-   calibration, confidence intervals, and across-seed variability.
-
-## Remaining work
-
-- Perform the single locked train/validation/test evaluation.
-- Aggregate global and field-strength-stratified metrics, calibration,
-  uncertainty intervals, and seed variability.
-- Run the approved ERM versus group reweighting or GroupDRO extension and one
-  additional manageable extension after the primary reproduction is secure.
-- Complete the final report, figures, limitations, and portfolio presentation.
-
-All locked training is complete. Budget about 1–2 available Colab GPU-hours for
-checkpoint audits, the single locked evaluation, aggregation, and operational
-overhead. This excludes free-tier quota recovery and service queueing.
+See `reports/FINAL_REPORT.md` for the interpretation and
+`reports/final_results/` for the public evidence.

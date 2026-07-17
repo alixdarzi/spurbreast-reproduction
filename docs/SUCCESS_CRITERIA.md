@@ -27,3 +27,19 @@ unresolved metric-provenance discrepancy, not an exact Table 2 reproduction.
 
 A valid run outside these bands is informative but is labelled an attempted,
 not successful close numerical, reproduction.
+
+## Final outcome
+
+The locked three-seed mean met every mandatory validity rule and every
+prespecified phenomenon-level criterion:
+
+- training accuracy 0.9998 and validation accuracy 0.9893;
+- test accuracy 0.5175 (difference from Table 2: −0.0025);
+- validation-to-test accuracy drop 0.4717; and
+- test predicted-positive-rate gap 0.8535 between 1.5 T and 3 T.
+
+Training/validation PPV and NPV are within their numerical bands. Test PPV and
+NPV differ by −0.0985 and +0.1048, respectively, and are classified under the
+predeclared metric-provenance exception. The final label is therefore
+**successful close reproduction of the field-strength shortcut phenomenon**,
+not exact reproduction of all three test metrics.

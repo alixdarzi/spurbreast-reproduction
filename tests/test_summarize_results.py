@@ -48,7 +48,10 @@ def _evaluation(value: float) -> dict:
                 "1.5T": {**_metrics(value, n=2), "predicted_positive_rate": value},
                 "3T": {**_metrics(value, n=2), "predicted_positive_rate": value},
             },
-            "patient_cluster_95ci": {},
+            "patient_cluster_95ci": {
+                metric: {"lower": value - 0.1, "upper": min(value + 0.1, 1.0)}
+                for metric in ("accuracy", "ppv", "npv", "sensitivity", "specificity")
+            },
         }
     return output
 
@@ -128,3 +131,19 @@ def test_find_evaluations_rejects_ambiguous_seed(tmp_path: Path) -> None:
     (second / "predictions.csv").write_text("split\n", encoding="utf-8")
     with pytest.raises(RuntimeError, match="exactly one"):
         MODULE.find_evaluations(tmp_path, [2025])
+
+
+def test_patient_cluster_intervals_are_written_per_seed(tmp_path: Path) -> None:
+    output = tmp_path / "intervals.csv"
+    MODULE.write_patient_cluster_intervals_csv(
+        output, {2025: _evaluation(0.8), 2026: _evaluation(0.9)}
+    )
+    rows = list(csv.DictReader(output.open(encoding="utf-8", newline="")))
+    assert len(rows) == 2 * len(MODULE.SPLITS) * 5
+    assert rows[0] == {
+        "seed": "2025",
+        "split": "training",
+        "metric": "accuracy",
+        "lower": "0.7000000000000001",
+        "upper": "0.9",
+    }

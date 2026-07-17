@@ -186,6 +186,26 @@ def write_field_strength_csv(output_path: Path, evaluations: dict[int, dict]) ->
     return rows
 
 
+def write_patient_cluster_intervals_csv(
+    output_path: Path, evaluations: dict[int, dict]
+) -> None:
+    rows: list[dict] = []
+    for seed in sorted(evaluations):
+        for split in SPLITS:
+            intervals = evaluations[seed][split]["patient_cluster_95ci"]
+            for metric in ("accuracy", "ppv", "npv", "sensitivity", "specificity"):
+                rows.append(
+                    {
+                        "seed": seed,
+                        "split": split,
+                        "metric": metric,
+                        "lower": intervals[metric]["lower"],
+                        "upper": intervals[metric]["upper"],
+                    }
+                )
+    write_rows(output_path, rows)
+
+
 def calibration_rows(
     prediction_paths: dict[int, Path], bins: int
 ) -> tuple[list[dict], list[dict]]:
@@ -401,6 +421,9 @@ def main() -> None:
     write_table2_csv(output_dir / "table2_comparison.csv", evaluations, aggregate)
     field_rows = write_field_strength_csv(
         output_dir / "field_strength_metrics.csv", evaluations
+    )
+    write_patient_cluster_intervals_csv(
+        output_dir / "patient_cluster_intervals.csv", evaluations
     )
     prediction_paths = {
         seed: evaluation_path.parent / "predictions.csv"

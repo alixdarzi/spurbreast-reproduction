@@ -22,3 +22,7 @@
 - Free Colab hardware and session duration are not guaranteed.
 - The local GTX 1660 Ti has 6 GB VRAM and may not fit batch-32 FP32 training.
 - Data are CC BY-NC 4.0. Model-weight redistribution remains to be reviewed.
+- The final three-seed experiment reproduces test accuracy but not the paper's
+  test PPV/NPV; this is reported as an unresolved metric-provenance discrepancy.
+- Test ECE is descriptive only. Temperature scaling or any other calibration
+  fit on test would be invalid and was not performed.

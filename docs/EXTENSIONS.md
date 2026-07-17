@@ -1,6 +1,7 @@
 # Manageable post-reproduction extensions
 
-Neither extension runs before the primary reproduction is complete and locked.
+The primary reproduction is complete and locked. These are optional follow-on
+experiments; neither changes or replaces the reported Table 2 result.
 
 ## 1. ERM versus group reweighting or GroupDRO
 
